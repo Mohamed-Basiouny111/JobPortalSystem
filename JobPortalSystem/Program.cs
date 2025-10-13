@@ -1,5 +1,6 @@
 using JobPortalSystem.Context;
 using JobPortalSystem.Models;
+using JobPortalSystem.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,11 @@ namespace JobPortalSystem
             {
                 op.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
             });
+
+            builder.Services.AddScoped<IGenericRepository<Job> , JobRepository>();
+            builder.Services.AddScoped<IGenericRepository<JobApplication> , JobApplicationRepository>();
+            builder.Services.AddScoped<IGenericRepository<JobCategory> , JobCategoryRepository>();
+            builder.Services.AddScoped<IGenericRepository<JobFavorite> , JobFavoriteRepository>();
 
             var app = builder.Build();
 
