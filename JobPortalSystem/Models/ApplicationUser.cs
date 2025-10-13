@@ -6,14 +6,10 @@ namespace JobPortalSystem.Models
     {
         // URL or path to the Photo
         public string? PhotoURL { get; set; }
-
         // URL or path to the CV file
         public string? CV { get; set; } 
-
         public string? CompanyName { get; set; }
-
         public string? CompanyDescription { get; set; }
-
         public bool CompanyIsAccepted { get; set; } = false;
 
         //Navigation Properties 1 : M with User can have multiple Jobs

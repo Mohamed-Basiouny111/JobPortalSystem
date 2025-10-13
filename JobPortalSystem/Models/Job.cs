@@ -8,22 +8,16 @@ namespace JobPortalSystem.Models
     {
         [Key]
         public int Id { get; set; }
-
         [Required]
         public string Title { get; set; }
-
         [Required]
         public string Description { get; set; }
-
         [Required]
         public string Requirements { get; set; }
-
         [Required]
         public string Location { get; set; }
-
         [Required]
         public string Experience { get; set; }
-
         public decimal Salary { get; set; }
 
         //Added by SQL Autmoatic when creating a new job
@@ -38,12 +32,10 @@ namespace JobPortalSystem.Models
         public bool Active { get; set; } = true;
 
         //Navigation Properties 1:M with JobCategory
-
         public int? CategoryId { get; set; }
         public JobCategory? Category { get; set; }
 
-        //Navigation Properties 1:M with ApplicationUser
-      
+        //Navigation Properties 1:M with ApplicationUser   
         public string? PostedByUserId { get; set; }
         public ApplicationUser? PostedUser { get; set; }
 
