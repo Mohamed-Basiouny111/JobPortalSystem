@@ -1,20 +1,23 @@
 using JobPortalSystem.Context;
 using JobPortalSystem.Models;
 using JobPortalSystem.Repository;
+using JobPortalSystem.SeedData;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace JobPortalSystem
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            //register identity services 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(op =>
             {
                 op.Password.RequiredLength = 4;
@@ -34,6 +37,7 @@ namespace JobPortalSystem
             builder.Services.AddScoped<IGenericRepository<JobApplication> , JobApplicationRepository>();
             builder.Services.AddScoped<IGenericRepository<JobCategory> , JobCategoryRepository>();
             builder.Services.AddScoped<IGenericRepository<JobFavorite> , JobFavoriteRepository>();
+
 
             var app = builder.Build();
 
@@ -57,6 +61,12 @@ namespace JobPortalSystem
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
+            //seed default roles
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                await SeedRoleData.SeedRolesAsync(services);
+            }
             app.Run();
         }
     }

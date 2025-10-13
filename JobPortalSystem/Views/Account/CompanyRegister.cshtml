@@ -1,0 +1,44 @@
+﻿@model CompanyRegisterVM
+
+@{
+    ViewData["Title"] = "CompanyRegister";
+}
+
+<h1>CompanyRegister</h1>
+
+<h4>CompanyRegisterVM</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CompanyRegister">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <partial name="_RegisterPV" model="Model" />
+
+            <div class="form-group">
+                <label asp-for="CompanyName" class="control-label"></label>
+                <input asp-for="CompanyName" class="form-control" />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CompanyDescription" class="control-label"></label>
+                <input asp-for="CompanyDescription" class="form-control" />
+                <span asp-validation-for="CompanyDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
