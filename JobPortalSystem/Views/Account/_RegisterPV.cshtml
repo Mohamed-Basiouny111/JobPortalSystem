@@ -1,22 +1,27 @@
 ﻿@model UserRegisterVM
 
-<div class="form-group">
-    <label asp-for="UserName" class="control-label"></label>
-    <input asp-for="UserName" class="form-control" />
+<div class="input-box">
+    <label asp-for="UserName" ></label>
+    <input asp-for="UserName" required/>
+         <br />  
     <span asp-validation-for="UserName" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="Email" class="control-label"></label>
-    <input asp-for="Email" class="form-control" />
+<div class="input-box">
+    <label asp-for="Email" ></label>
+    <input asp-for="Email" required/>
+    <br />
     <span asp-validation-for="Email" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="Password" class="control-label"></label>
-    <input asp-for="Password" class="form-control" />
+<div class="input-box">
+    <label asp-for="Password"></label>
+    <input asp-for="Password" required />
+    <br />     
     <span asp-validation-for="Password" class="text-danger"></span>
 </div>
-<div class="form-group">
-    <label asp-for="ConfirmPassword" class="control-label"></label>
-    <input asp-for="ConfirmPassword" class="form-control" />
+<div class="input-box">
+    <label asp-for="ConfirmPassword" ></label>
+    <input asp-for="ConfirmPassword" required />
+    <br />
     <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
 </div>
+

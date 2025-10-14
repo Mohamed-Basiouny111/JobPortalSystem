@@ -1,0 +1,18 @@
+﻿@if (User.Identity.IsAuthenticated == true)
+{
+    <li><a asp-controller="Account" asp-action="Logout" class="link">Sign Out</a></li>
+    <li class="link"><a asp-controller="Account" asp-action="Profile" class="link">Welcome @User.Identity.Name</a></li>
+}
+else
+{
+    @* <li >
+            <a class="link" asp-area="" asp-controller="Account" asp-action="CompanyRegister">Company Register</a>
+        </li> *@
+
+    <li>
+        <a class="link" asp-area="" asp-controller="Account" asp-action="UserRegister">Register</a>
+    </li>
+    <li>
+        <a class="link" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+    </li>
+}

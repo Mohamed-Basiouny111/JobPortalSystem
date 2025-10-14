@@ -1,0 +1,289 @@
+/* Start Sidebar Style */
+main {
+  min-height: 100vh;
+  background-color: var(--back2-color);
+  display: flex;
+}
+.sidebar {
+  background-color: var(--back1-color);
+  padding: 20px;
+  width: 220px;
+  height: 100%;
+  position: fixed;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 0px 29px 0px;
+  z-index: 20;
+}
+
+.sidebar h1.logo {
+  margin: 0 auto 3rem;
+  font-weight: 700;
+  font-size: 2rem;
+}
+.sidebar li {
+  padding: 10px 1rem;
+  font-size: 14px;
+  color: var(--header-color);
+  margin-bottom: 5px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  -webkit-transition: background-color 0.3s;
+  -moz-transition: background-color 0.3s;
+  -ms-transition: background-color 0.3s;
+  -o-transition: background-color 0.3s;
+}
+.sidebar li.active,
+.sidebar li:hover {
+  background-color: var(--main-color);
+  color: var(--back1-color);
+}
+.sidebar li span {
+  margin-left: 10px;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    width: 55px;
+    padding: 10px;
+  }
+  .sidebar li span {
+    display: none;
+  }
+  .sidebar li {
+    justify-content: center;
+  }
+  .sidebar h1.logo {
+    font-size: 14px;
+    margin-bottom: 2rem;
+  }
+  .sidebar h1.logo::before {
+    width: 5px;
+    height: 5px;
+    border: 2px solid var(--back1-color);
+    top: calc(100% - 2px);
+  }
+  .sidebar h1.logo::after {
+    width: 30px;
+    height: 2px;
+    top: calc(100% + 1px);
+  }
+  .sidebar ul li a {
+    justify-content: center;
+  }
+}
+/* End Sidebar Style */
+
+/* Start Header Style */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: var(--back2-color);
+}
+.header a.go-home {
+  color: var(--main-color);
+}
+.header .icons {
+  display: flex;
+  align-items: center;
+}
+.header .icons .notification {
+  font-size: 20px;
+  position: relative;
+  cursor: pointer;
+}
+.header .icons .notification i {
+  color: var(--header-color);
+}
+.header .icons .notification:hover i {
+  font-weight: 900;
+}
+.header .icons .notification::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  border-radius: 50%;
+  right: -2px;
+  top: -2px;
+}
+.header .icons img {
+  width: 35px;
+  margin-left: 1rem;
+  cursor: pointer;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+/* End Header Style */
+
+/* Start Content Style */
+.content {
+  width: calc(100% - 220px);
+  position: relative;
+  height: 100%;
+  left: 220px;
+}
+.page {
+  min-height: calc(100vh - 70px);
+  position: absolute;
+  width: 100%;
+  padding: 2rem 1rem;
+  background-color: var(--back2-color);
+  display: none;
+}
+.page1 {
+  display: block;
+}
+.page > h1 {
+  margin-bottom: 3rem;
+  position: relative;
+  color: var(--header-color);
+}
+.page > h1::before,
+.page > h1::after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  width: 120px;
+  background: var(--card-color);
+  bottom: -10px;
+  left: 0;
+}
+.page > h1::after {
+  width: 40px;
+  background: var(--header-color);
+}
+.page .inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+.page .inputs .input span {
+  color: var(--header-color);
+  margin-bottom: 1rem;
+  display: block;
+}
+.page .inputs .input input,
+.input select {
+  font-size: 1rem;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--lines-color);
+  outline: none;
+  color: var(--paragraph-color);
+  background-color: var(--card-color);
+  border-radius: 5px;
+  cursor: pointer;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+}
+.page .inputs .input input:focus {
+  border-color: var(--main-color);
+}
+.page .btns {
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.page .btns input {
+  background-color: var(--main-color);
+  color: var(--back1-color);
+  padding: 10px 2rem;
+  border: 0;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border-radius: 30px;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  -ms-border-radius: 30px;
+  -o-border-radius: 30px;
+  transition: opacity 0.3s;
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  -ms-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s;
+}
+.page .btns input:hover {
+  opacity: 0.8;
+}
+@media (max-width: 768px) {
+  .content {
+    width: calc(100% - 55px);
+    left: 55px;
+  }
+  .page .inputs {
+    grid-template-columns: 1fr;
+  }
+}
+/* End Content Style */
+
+/* Start Rich TextArea Style */
+.tox .tox-promotion,
+.tox:not([dir="rtl"]) .tox-statusbar__branding {
+  display: none;
+}
+/* End Rich TextArea Style */
+
+/* Start DataTable Style */
+#data-table_wrapper {
+  border: 1px solid var(--lines-color);
+  padding: 10px;
+  border-radius: 10px;
+  color: var(--header-color);
+  background-color: var(--card-color);
+}
+table.dataTable.table-striped > tbody > tr.odd > * {
+  background-color: var(--card-color);
+  color: var(--paragraph-color);
+}
+table.dataTable.table-striped > tbody > tr.even > * {
+  background-color: var(--back1-color);
+  color: var(--paragraph-color);
+}
+table.dataTable thead th,
+table.dataTable thead td {
+  background-color: var(--back1-color);
+  color: var(--header-color);
+}
+table.dataTable tfoot {
+  display: none;
+}
+.row:last-of-type,
+.row:first-of-type {
+  flex-wrap: nowrap;
+}
+div.dataTables_wrapper div.dataTables_filter input,
+div.dataTables_wrapper div.dataTables_length select {
+  background-color: var(--card-color);
+  color: var(--paragraph-color);
+}
+@media (max-width: 768px) {
+  div.dataTables_wrapper div.dataTables_info {
+    display: none;
+  }
+  #data-table_wrapper {
+    overflow: auto;
+  }
+  .row:last-of-type > *,
+  .row:first-of-type > * {
+    width: auto;
+    padding-left: 2rem;
+  }
+}
+/* End DataTable Style */

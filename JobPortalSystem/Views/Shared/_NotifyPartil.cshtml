@@ -1,0 +1,36 @@
+﻿<script type="text/javascript">
+	toastr.options = {
+		'closeButton': true,
+		'debug': false,
+		'newestOnTop': false,
+		'progressBar': true,
+		'positionClass': 'toast-top-right',
+		'preventDuplicates': false,
+		'showDuration': '1000',
+		'hideDuration': '1000',
+		'timeOut': '5000',
+		'extendedTimeOut': '1000',
+		'showEasing': 'swing',
+		'hideEasing': 'linear',
+		'showMethod': 'fadeIn',
+		'hideMethod': 'fadeOut',
+	}
+</script>
+
+
+@if (TempData["NotifySuccess"] != null)
+{
+	<script type="text/javascript">
+		toastr.success('@TempData["NotifySuccess"]', '@TempData["NotifyTitle"]')
+	</script>
+}
+
+@if (TempData["Notifyinfo"] != null)
+{
+	<script type="text/javascript">
+
+		toastr.info('@TempData["Notifyinfo"]', '@TempData["NotifyTitle"]')
+
+	</script>
+}
+

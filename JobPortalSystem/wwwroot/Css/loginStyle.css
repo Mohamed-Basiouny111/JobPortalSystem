@@ -1,0 +1,198 @@
+body {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+.circle {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background-color: var(--main-color);
+  top: 50%;
+  left: 100%;
+  opacity: 0.7;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+.circle::before,
+.circle::after {
+  content: "";
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background-color: var(--main-color);
+  top: 50%;
+  left: 50%;
+  opacity: 0.5;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+}
+.circle::after {
+  width: 700px;
+  height: 700px;
+  opacity: 0.3;
+}
+@media (max-width: 768px) {
+  .circle {
+    display: none;
+  }
+}
+.half-background {
+  position: absolute;
+  height: 100%;
+  width: 50%;
+  left: 0;
+  top: 0;
+  background-color: var(--main-color);
+  z-index: -1;
+}
+.container {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.container h1 {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 35px;
+  color: var(--back1-color);
+}
+.container .home {
+  position: absolute;
+  left: 1rem;
+  bottom: 3rem;
+  cursor: pointer;
+  color: var(--back1-color);
+}
+.form {
+  background-color: var(--card-color);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0px 0px 53px 5px rgba(0, 0, 0, 0.25);
+  width: 340px;
+}
+.form h2 {
+  position: relative;
+  text-align: center;
+  color: var(--header-color);
+  margin-bottom: 3rem;
+  padding: 10px;
+}
+.form h2::before {
+  content: "";
+  position: absolute;
+  background-color: var(--main-color);
+  height: 5px;
+  width: 30px;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+.form .input-box {
+  margin-bottom: 20px;
+  position: relative;
+}
+.form .input-box input {
+  color: var(--paragraph-color);
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  outline: none;
+  border: 0;
+  border: 1px solid var(--lines-color);
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  transition: border 0.3s;
+  -webkit-transition: border 0.3s;
+  -moz-transition: border 0.3s;
+  -ms-transition: border 0.3s;
+  -o-transition: border 0.3s;
+}
+.form .input-box span {
+  padding: 10px;
+  position: absolute;
+  left: 0;
+  color: var(--paragraph-color);
+  font-size: 14px;
+  pointer-events: none;
+  text-transform: uppercase;
+  transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -moz-transition: 0.3s;
+  -ms-transition: 0.3s;
+  -o-transition: 0.3s;
+}
+.form .input-box input:valid ~ span,
+.form .input-box input:focus ~ span {
+  color: var(--main-color);
+  font-size: 10px;
+  background-color: var(--back1-color);
+  border-left: 1px solid var(--main-color);
+  border-right: 1px solid var(--main-color);
+  padding: 0 10px;
+  transform: translate(10px, -6px);
+  -webkit-transform: translate(10px, -6px);
+  -moz-transform: translate(10px, -6px);
+  -ms-transform: translate(10px, -6px);
+  -o-transform: translate(10px, -6px);
+  letter-spacing: 2px;
+}
+.form .input-box input:valid,
+.form .input-box input:focus {
+  border: 1px solid var(--main-color);
+}
+.form button {
+  width: 100%;
+  background-color: var(--main-color);
+  color: var(--back1-color);
+  font-size: 1rem;
+  outline: none;
+  border: none;
+  padding: 10px;
+  margin: 1rem 0;
+  cursor: pointer;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+  transition: opacity 0.3s;
+  -webkit-transition: opacity 0.3s;
+  -moz-transition: opacity 0.3s;
+  -ms-transition: opacity 0.3s;
+  -o-transition: opacity 0.3s;
+}
+.form button:hover {
+  opacity: 0.8;
+}

@@ -22,6 +22,10 @@ namespace JobPortalSystem.Controllers
         [HttpGet]
         public IActionResult UserRegister()
         {
+            if (User.Identity.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -29,6 +33,7 @@ namespace JobPortalSystem.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UserRegister(UserRegisterVM userRegisterVM)
         {
+            
             var existingUser = await userManager.FindByEmailAsync(userRegisterVM.Email);
             if (existingUser != null)
             {
@@ -50,7 +55,7 @@ namespace JobPortalSystem.Controllers
                     await userManager.AddToRoleAsync(user, "Job Seeker");
 
                     //Cookies
-                    await signInManager.SignInAsync(user, false);
+                  //  await signInManager.SignInAsync(user, false);
                     return RedirectToAction("Login");
                 }
                 foreach (var item in result.Errors)
@@ -69,6 +74,10 @@ namespace JobPortalSystem.Controllers
         [HttpGet]
         public IActionResult CompanyRegister()
         {
+            if (User.Identity.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -100,7 +109,7 @@ namespace JobPortalSystem.Controllers
                     //assign Role
                     await userManager.AddToRoleAsync(user, "Employer");
                     //Cookies
-                    await signInManager.SignInAsync(user, false);
+                   // await signInManager.SignInAsync(user, false);
                     return RedirectToAction("Login");
                 }
                 foreach (var item in result.Errors)
@@ -117,6 +126,10 @@ namespace JobPortalSystem.Controllers
         [HttpGet]
         public IActionResult Login(string? returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             returnUrl ??= Url.Content("~/");
             ViewData["ReturnUrl"] = returnUrl;
 
@@ -143,9 +156,12 @@ namespace JobPortalSystem.Controllers
                 {
                     bool found = await userManager.CheckPasswordAsync(user, loginVM.Password);
                     if (found)
-                    {
+                    { //Add Claim
+                        List<Claim> claims = new List<Claim>();
+                        claims.Add(new Claim("PhotoURL", user.PhotoURL));
+
                         //create Cookie 
-                        await signInManager.SignInAsync(user, loginVM.RememberMe);
+                        await signInManager.SignInWithClaimsAsync(user, loginVM.RememberMe,claims);
 
                         if (Url.IsLocalUrl(returnUrl))
                             return LocalRedirect(returnUrl);
@@ -202,6 +218,7 @@ namespace JobPortalSystem.Controllers
                 string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
                 string userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
                 string userName = User.Identity.Name;
+                string photo = User.Claims.FirstOrDefault(c=>c.Type == "PhotoURL").Value;
             }
 
             return View();

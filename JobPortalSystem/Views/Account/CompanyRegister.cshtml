@@ -2,43 +2,65 @@
 
 @{
     ViewData["Title"] = "CompanyRegister";
+    Layout = null;
 }
 
-<h1>CompanyRegister</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ALWASIT</title>
 
-<h4>CompanyRegisterVM</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="CompanyRegister">
+    <!-- Link FontAwesome -->
+    <link rel="stylesheet" href="~/Css/all.min.css" />
+    <!-- Link Global Style -->
+    <link rel="stylesheet" href="~/Css/global.css" />
+    <!-- Link Main Style -->
+    <link rel="stylesheet" href="~/Css/loginStyle.css" />
+</head>
+<body>
+    <div class="circle"></div>
+    <div class="half-background"></div>
+    <div class="container">
+        <h1>ALWASIT</h1>
+        <a asp-controller="Home" asp-action="Index" class="home">
+            <i class="fa-solid fa-angle-left"></i>
+            Home
+        </a>
+
+        <form asp-action="CompanyRegister" class="form">
+            <h2>Company Register</h2>
+             <p class="input-box">
+                <a asp-controller="Account" asp-action="UserRegister">Register As User? Sign up</a>
+            </p>
+
             <div asp-validation-summary="All" class="text-danger"></div>
-
+            <br />
             <partial name="_RegisterPV" model="Model" />
 
-            <div class="form-group">
-                <label asp-for="CompanyName" class="control-label"></label>
-                <input asp-for="CompanyName" class="form-control" />
+            <div class="input-box">
+                <label asp-for="CompanyName" ></label>
+                <input asp-for="CompanyName" required />
+                <br />
                 <span asp-validation-for="CompanyName" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="CompanyDescription" class="control-label"></label>
-                <input asp-for="CompanyDescription" class="form-control" />
+            <div class="input-box">
+                <label asp-for="CompanyDescription" ></label>
+                <input asp-for="CompanyDescription" required />
+                <br />
                 <span asp-validation-for="CompanyDescription" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="input-box mt-2">
+                <button>submit</button>
             </div>
         </form>
+
+
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <partial name="_ValidationScriptsPartial" />
 
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+</body>
+</html>
