@@ -22,4 +22,3 @@ namespace JobPortalSystem.Models
       
     }
 }
- //A7Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
