@@ -1,8 +1,52 @@
-﻿@{
+﻿@model List<Job>
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1 class="text-center text-primary"> All Jobs </h1>
+<br />
+<div class="container my-4">
+    @* <h2 class="text-center mb-4 text-primary">Available Jobs</h2> *@
+    <div class="row">
+        @foreach (var job in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="job-card p-3">
+                    <h4>@job.Title</h4>
+                    <p><strong>Company:</strong> @job.PostedUser?.CompanyName"</p>
+                    <p><strong>Location:</strong> @job.Location</p>
+                    <p><strong>Requirements:</strong> @job.Requirements</p>
+                    <p><strong>Experience:</strong> @job.Experience</p>
+                    <p><strong>PostedDate:</strong> @job.PostedDate</p>
+                    <p><strong>Salary:</strong> @job.Salary</p>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <a asp-action"" asp-controller="" class="btn btn-warning">Apply Job</a>
+                        <i class="fa-regular fa-heart fa-xl" style="color: #74C0FC;"></i>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 </div>
+
+<style>
+    .job-card {
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        transition: 0.2s ease;
+        background-color: #fff;
+    }
+
+        .job-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    body {
+        background-color: #f8f9fa;
+    }
+</style>
+
+

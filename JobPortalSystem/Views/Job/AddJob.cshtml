@@ -1,0 +1,37 @@
+﻿@* @model JobAndCategoriesVM *@
+
+@{
+    ViewData["Title"] = "AddJob";
+    // SelectList selectListItems = new SelectList(Model.Categories, "Id", "Name");
+    Layout = "_ProfileLayout";
+
+}
+
+
+<h1 class="text-center text-primary mb-2">Add New Job</h1>
+
+
+<hr />
+<div class="container-md my-3">
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="AddJob" asp-controller="job" method="post" class="border p-4 rounded shadow-sm bg-light">
+                <div asp-validation-summary="All" class="text-danger"></div>
+
+                <partial name="_JobPV" model="Model" />
+
+                <div class="d-flex align-items-center">
+                    <input type="submit" value="Add" class="btn btn-primary text-white mx-2 my-3 py-2 px-4" />
+                    <a asp-action="GetAll" class="btn btn-secondary px-4">Back to List</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

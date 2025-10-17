@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+          content="Welcome to my portfolio website. Here, you'll find a showcase of my latest works and projects, as well as a comprehensive list of my skills and services. Our team of experts is dedicated to delivering high-quality solutions that exceed your expectations. From web design and development to digital marketing and branding, we've got you covered. Browse through our portfolio and get in touch to discuss your next project." />
+    <title>@ViewData["Title"] - ALWASIT</title>
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+   
+
+    <!-- Link FontAwesome -->
+    <link rel="stylesheet" href="~/Css/all.min.css" asp-append-version="true" />
+    <!-- Link Global Style -->
+    <link rel="stylesheet" href="~/Css/global.css" asp-append-version="true" />
+    <!-- Link Main Style -->
+    <link rel="stylesheet" href="~/Css/style.css" asp-append-version="true" />
+    <!-- Link Admin Style -->
+    <link rel="stylesheet" href="~/Css/admin.css" asp-append-version="true" />
+  
+
+
+    @await RenderSectionAsync("Sheets", required: false)
+
+</head>
+<body>
+    <!-- Start Header -->
+    
+    <header>
+        <div class="container">
+            <div class="burger-list">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <h1 class="logo">ALWASIT</h1>
+
+            <ul class="nav-bar">
+
+                <li><a class="navbar-brand active link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+
+                <li><a href="#about" class="link">about</a></li>
+                <li><a href="#service" class="link">service</a></li>
+                <li><a href="#work" class="link">work</a></li>
+                <partial name="_IdentityPartial" />
+            </ul>
+            <div class="dark-mode">
+                <i class="fa-solid fa-moon dark active"></i>
+                <i class="fa-solid fa-sun light"></i>
+            </div>
+        </div>
+    </header>
+   
+    <!-- End Header -->
+    <!-- Start Home Section -->
+    <section class="home  " id="home" >
+
+        <div class="container-fluid  ">
+            <div class="row">
+                <div class="col-md-3   ">
+                    <div class="sidebar">
+                        <h1 class="logo mt-2">SC.</h1>
+                        <ul>
+                            <li data-filter=".page1" class="active">
+                                <i class="fa-regular fa-chart-bar"></i>
+                                <span>Profile</span>
+                            </li>
+                            @* <li data-filter=".page2">
+                    <i class="fa-solid fa-gear"></i>
+                    
+                     <span>
+                        <a asp-controller="Job" asp-action="GetAll">Job</a>
+                    </span> 
+                </li> *@
+                            <li data-filter=".page2">
+                                <a asp-controller="Job" asp-action="GetAll">
+                                    <span>Jobs</span>
+                                </a>
+                            </li>
+                            <li data-filter=".page3">
+                                <i class="fa-regular fa-user"></i>
+                                <span>Job Category</span>
+                            </li>
+                            <a asp-controller="Job" asp-action="GetAll">Job</a>
+                        </ul>
+                    </div>
+                    
+                </div>
+                <div class="col-md-9 profile-content mt-5 ms-5 p-5 bg-danger">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Home Section -->
+    @* @RenderBody() *@
+   
+    
+
+    <partial name="_NotifyPartil" />
+
+ 
+    <!-- Main JS -->
+    @* <script src="~/Js/main.js"></script>
+    <!-- Admin Js File -->
+    <script src="~/Js/admin.js"></script> *@
+
+  
+
+    @* <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
