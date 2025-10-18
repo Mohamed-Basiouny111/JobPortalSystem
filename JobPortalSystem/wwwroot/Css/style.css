@@ -528,23 +528,23 @@ header .burger-list span:not(:nth-of-type(2)) {
 .service {
   padding: var(--section-padding);
 }
-.service .cards {
+/*.service .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 3rem 5rem;
-}
+}*/
 .service .cards .card {
   border: 2px solid var(--header-color);
   border-radius: 6px;
   padding: 2rem;
   color: var(--header-color);
 }
-.service .cards .card:last-of-type {
+/*.service .cards .card:last-of-type {
   padding-top: 4rem;
-}
-.service .cards .card i {
+}*/
+/*.service .cards .card i {
   font-size: 2.5rem;
-}
+}*/
 .service .cards .card h3 {
   margin: 1rem 0 2rem;
   font-weight: 500;
@@ -553,7 +553,7 @@ header .burger-list span:not(:nth-of-type(2)) {
   color: var(--paragraph-color);
   line-height: 1.6;
 }
-.service .cards .card a {
+/*.service .cards .card a {
   width: fit-content;
   padding: 1rem 2rem;
   background-color: var(--header-color);
@@ -565,10 +565,10 @@ header .burger-list span:not(:nth-of-type(2)) {
   -moz-transition: opacity 0.3s;
   -ms-transition: opacity 0.3s;
   -o-transition: opacity 0.3s;
-}
-.service .cards .card a:hover {
+}*/
+/*.service .cards .card a:hover {
   opacity: 0.8;
-}
+}*/
 /* End Services Style */
 
 /* Start Work Style */
@@ -1551,4 +1551,120 @@ footer .copyright {
 .alert.error span {
   background-color: #f44336;
 }
-/* End Alert Style */
+
+
+/* hamza */
+
+.card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+  
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    
+    .card h3 {
+        font-size: 1.2rem;
+        color: #333;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        margin: 5px 0;
+        color: #555;
+    }
+
+   
+    .card i {
+        color: #007bff;
+        margin-right: 6px;
+    }
+
+   
+    .card .d-flex {
+        margin-top: 15px;
+    }
+
+
+#icons i.favorite {
+    font-size: 22px;
+    cursor: pointer;
+    color: #0d6efd;
+    transition: color 0.3s;
+}
+
+    #icons i.favorite.active {
+        color: #ff4757;
+    }
+
+
+.row > [class*='col-'] {
+    display: flex;
+}
+
+
+.job-details {
+    display: grid;
+    grid-template-rows: repeat(8, auto);
+    row-gap: 8px;
+    flex-grow: 1;
+    word-break: break-word; 
+}
+
+
+.job-details > div strong {
+    min-width: 20px;
+    display: inline-block;
+ }
+
+    
+
+
+   
+.job-details i {
+ color: #0d6efd;
+ flex-shrink: 0;
+ margin-top: 2px;
+}
+
+.card.job-card {
+    height: 100%;
+}
+
+.row > [class*='col-'] {
+    display: flex;
+}
+
+.job-title {
+    font-size: 1.25rem; 
+    font-weight: 700; 
+    color: #0d6efd;
+    margin-bottom: 10px;
+    text-transform: capitalize; 
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid #0d6efd; 
+    padding-bottom: 5px;
+}
+
+    .job-title i {
+        color: #0d6efd;
+        font-size: 1.2rem;
+    }
+
+    .job-title strong {
+        color: #222; 
+    }

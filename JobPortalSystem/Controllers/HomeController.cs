@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
-using JobPortalSystem.Models;
+﻿using JobPortalSystem.Models;
 using JobPortalSystem.Repository;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
+using System.Security.Claims;
 
 namespace JobPortalSystem.Controllers
 {
@@ -10,7 +11,7 @@ namespace JobPortalSystem.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IJobRepository jobRepo;
 
-        public HomeController(ILogger<HomeController> logger , IJobRepository jobRepo)
+        public HomeController(ILogger<HomeController> logger, IJobRepository jobRepo)
         {
             _logger = logger;
             this.jobRepo=jobRepo;
@@ -18,11 +19,11 @@ namespace JobPortalSystem.Controllers
 
         public IActionResult Index()
         {
-           
-                var jobs = jobRepo.GetJobsWithCategoriesAsync().Result;
-                return View(jobs);
-            
-            
+
+            var jobs = jobRepo.GetJobsWithCategoriesAsync().Result;
+            return View(jobs);
+
+
         }
 
         public IActionResult Privacy()

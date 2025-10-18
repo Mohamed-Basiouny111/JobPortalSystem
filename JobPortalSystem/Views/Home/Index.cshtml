@@ -3,50 +3,70 @@
     ViewData["Title"] = "Home Page";
 }
 
-<h1 class="text-center text-primary"> All Jobs </h1>
-<br />
-<div class="container my-4">
-    @* <h2 class="text-center mb-4 text-primary">Available Jobs</h2> *@
-    <div class="row">
-        @foreach (var job in Model)
-        {
-            <div class="col-md-6 mb-4">
-                <div class="job-card p-3">
-                    <h4>@job.Title</h4>
-                    <p><strong>Company:</strong> @job.PostedUser?.CompanyName"</p>
-                    <p><strong>Location:</strong> @job.Location</p>
-                    <p><strong>Requirements:</strong> @job.Requirements</p>
-                    <p><strong>Experience:</strong> @job.Experience</p>
-                    <p><strong>PostedDate:</strong> @job.PostedDate</p>
-                    <p><strong>Salary:</strong> @job.Salary</p>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <a asp-action"" asp-controller="" class="btn btn-warning">Apply Job</a>
-                        <i class="fa-regular fa-heart fa-xl" style="color: #74C0FC;"></i>
+
+
+
+
+<section class="service" id="service">
+    <div class="reveal">
+        <h1 class="section-header">All Jobs </h1>
+        <p class="section-para fs-5">
+            Explore the latest job opportunities from top employers and find the role that fits your career goals.
+        </p>
+        <div class="container">
+            <div class="row g-4 align-items-stretch">
+                @foreach (var job in Model)
+                {
+                    <div class="col-md-4 col-sm-6 d-flex">
+                        <div class="card job-card flex-fill d-flex flex-column justify-content-between">
+
+                            <div class="job-details">
+
+                                <div class="job-title">
+                                    <i class="fa-solid fa-tag"></i>
+                                    <strong>@job.Title</strong>
+                                </div>
+                                <div><i class="fa-solid fa-building"></i><strong>Company:</strong> @job.PostedUser?.CompanyName</div>
+                                <div><i class="fa-solid fa-city"></i><strong>Location:</strong> @job.Location</div>
+                                <div><i class="fa-solid fa-gear"></i><strong>Requirements:</strong> @job.Requirements</div>
+                                <div><i class="fa-solid fa-medal"></i><strong>Experience:</strong> @job.Experience</div>
+                                <div><i class="fa-solid fa-calendar-days"></i><strong>PostedDate:</strong> @job.PostedDate</div>
+                                <div><i class="fa-solid fa-folder-tree"></i><strong>Category:</strong> @job.Category.Name</div>
+                                <div><i class="fa-solid fa-money-bill-trend-up"></i><strong>Salary:</strong> @job.Salary</div>
+                            </div>
+
+                            <div id="icons" class="d-flex align-items-center justify-content-between mt-3">
+                                @if (User.IsInRole("admin") || User.IsInRole("employer"))
+                                {
+                                    <a asp-action="" asp-controller="" class="btn btn-warning text-white disabled">Apply Job</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="" asp-controller="" class="btn btn-warning text-white">Apply Job</a>
+                                }
+
+                               
+                                <i class="fa-regular fa-heart fa-xl favorite"></i>
+                            </div>
+
+                        </div>
                     </div>
-                </div>
+                }
             </div>
-        }
+        </div>
+
     </div>
-</div>
+</section>
 
-<style>
-    .job-card {
-        border: 1px solid #ddd;
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        transition: 0.2s ease;
-        background-color: #fff;
-    }
 
-        .job-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-    body {
-        background-color: #f8f9fa;
-    }
-</style>
+<script>
+        document.querySelectorAll('.favorite').forEach(icon => {
+      icon.addEventListener('click', () => {
+        icon.classList.toggle('active'); 
+        icon.classList.toggle('fa-solid'); 
+        icon.classList.toggle('fa-regular'); 
+      });
+    });
+</script>
 
 

@@ -66,7 +66,7 @@ namespace JobPortalSystem.Controllers
                     Salary = job_Categ_VM.Salary,
                     CategoryId = job_Categ_VM.CategoryId,
                     PostedByUserId = userId,
-                    ExpiryDate = job_Categ_VM.ExpiryDate,
+                    ExpiryDate = job_Categ_VM.ExpiryDate.Date,
 
                 };
                 await JobRepo.AddAsync(newJob);
@@ -119,7 +119,7 @@ namespace JobPortalSystem.Controllers
                 targetjob.CategoryId = job.CategoryId;
                 targetjob.Experience = job.Experience;
                 targetjob.Requirements = job.Requirements;
-                targetjob.ExpiryDate = job.ExpiryDate;
+                targetjob.ExpiryDate = job.ExpiryDate.Date;
                 JobRepo.Update(targetjob);
                 await JobRepo.SaveAsync();
                 TempData["SuccessMessage"] = "Job updated successfully!";

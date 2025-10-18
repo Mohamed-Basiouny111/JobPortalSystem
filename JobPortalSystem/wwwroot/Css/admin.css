@@ -123,7 +123,7 @@ main {
 /* End Header Style */
 
 /* Start Content Style */
-.content {
+/*.content {
   width: calc(100% - 220px);
   position: relative;
   height: 100%;
@@ -158,8 +158,8 @@ main {
 .page > h1::after {
   width: 40px;
   background: var(--header-color);
-}
-.page .inputs {
+}*/
+/*.page .inputs {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
@@ -230,7 +230,7 @@ main {
   .page .inputs {
     grid-template-columns: 1fr;
   }
-}
+}*/
 /* End Content Style */
 
 /* Start Rich TextArea Style */
@@ -264,26 +264,25 @@ table.dataTable thead td {
 table.dataTable tfoot {
   display: none;
 }
-.row:last-of-type,
-.row:first-of-type {
-  flex-wrap: nowrap;
-}
+
 div.dataTables_wrapper div.dataTables_filter input,
 div.dataTables_wrapper div.dataTables_length select {
   background-color: var(--card-color);
   color: var(--paragraph-color);
 }
-@media (max-width: 768px) {
-  div.dataTables_wrapper div.dataTables_info {
-    display: none;
-  }
-  #data-table_wrapper {
-    overflow: auto;
-  }
-  .row:last-of-type > *,
-  .row:first-of-type > * {
-    width: auto;
-    padding-left: 2rem;
-  }
+.profile-content {
+    position: absolute;
+    top: 150px;
+    left: 235px;
+    width: 1282px
 }
-/* End DataTable Style */
+@media (max-width: 768px) {
+    div .dataTables_wrapper div.dataTables_info {
+        display: none;
+    }
+
+    #data-table_wrapper {
+        overflow: auto;
+    }
+}
+

@@ -12,9 +12,8 @@
 
 
 <hr />
-<div class="container-md my-3">
-    <div class="row">
-        <div class="col-md-12">
+
+    
             <form asp-action="AddJob" asp-controller="job" method="post" class="border p-4 rounded shadow-sm bg-light">
                 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -25,10 +24,9 @@
                     <a asp-action="GetAll" class="btn btn-secondary px-4">Back to List</a>
                 </div>
             </form>
-        </div>
-    </div>
+       
+   
 
-</div>
 
 
 @section Scripts {
