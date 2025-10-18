@@ -1,4 +1,5 @@
 using JobPortalSystem.Context;
+using JobPortalSystem.Controllers;
 using JobPortalSystem.Models;
 using JobPortalSystem.Repository;
 using JobPortalSystem.SeedData;
@@ -36,7 +37,8 @@ namespace JobPortalSystem
             builder.Services.AddScoped<IGenericRepository<Job> , JobRepository>();
             builder.Services.AddScoped<IGenericRepository<JobApplication> , JobApplicationRepository>();
             builder.Services.AddScoped<IGenericRepository<JobCategory> , JobCategoryRepository>();
-            builder.Services.AddScoped<IGenericRepository<JobFavorite> , JobFavoriteRepository>();
+            //builder.Services.AddScoped<IGenericRepository<JobFavorite>, JobFavoriteRepository>();
+            builder.Services.AddScoped<JobFavoriteRepository>();
 
 
             var app = builder.Build();
