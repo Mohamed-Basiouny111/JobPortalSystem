@@ -59,13 +59,15 @@
                 console.log("Searching for:", query);
 
                 try {
+                    // m4 3aaaaaaaaaayez ba3basa hna y 4abaaaaaaaaaaab
                     const response = await fetch(`/Home/SearchForJob?searchWord=${encodeURIComponent(query)}`);
                     if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
 
                     const html = await response.text();
                     jobsContainer.innerHTML = html;
+                     //******************************************************************************* */
 
-                    // تفعيل حدث الـ favorite بعد التحديث
+                    //  favorite icon
                     document.querySelectorAll('.favorite').forEach(icon => {
                         icon.addEventListener('click', () => {
                             icon.classList.toggle('active');
@@ -85,14 +87,16 @@
             console.log("Selected category ID:", selectedCategoryId);
 
             try {
-
+                 // m4 3aaaaaaaaaayez ba3basa hna y 4abaaaaaaaaaaab
                     const response = await fetch(`/Home/SearchForJobByCategory?categoryId=${encodeURIComponent(selectedCategoryId)}`);
                     if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
 
                     const html = await response.text();
                     jobsContainer.innerHTML = html;
-
-                    // تفعيل حدث الـ favorite بعد التحديث
+                    //******************************************************************************* */
+                    
+                    //  favorite icon
+                    
                     document.querySelectorAll('.favorite').forEach(icon => {
                         icon.addEventListener('click', () => {
                             icon.classList.toggle('active');
