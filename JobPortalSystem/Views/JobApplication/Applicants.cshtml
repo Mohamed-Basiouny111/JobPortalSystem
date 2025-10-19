@@ -1,50 +1,98 @@
 ﻿@model IEnumerable<JobPortalSystem.Models.JobApplication>
+
 @{
-    ViewBag.Title = "Applicants";
+    ViewData["Title"] = "Applicants";
+    var jobId = ViewBag.JobId;
 }
 
-<div class="container mt-4">
-    <h2>Applicants</h2>
+<div class="container my-5">
+    <div class="card shadow-sm p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="text-primary mb-0">
+                <i class="fa-solid fa-users me-2"></i> Applicants for Job ID: @jobId
+            </h3>
+            <a asp-controller="Job" asp-action="GetAll" class="btn btn-outline-secondary btn-sm">
+                <i class="fa-solid fa-arrow-left me-1"></i> Back to Jobs
+            </a>
+        </div>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
 
-    @if (!Model.Any())
-    {
-        <p>No applicants yet for this job.</p>
-    }
-    else
-    {
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Applicant</th>
-                    <th>Date</th>
-                    <th>Cover Letter</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var app in Model)
-                {
-                    <tr>
-                        <td>@app.User?.UserName</td>
-                        <td>@app.AppliedDate.ToShortDateString()</td>
-                        <td>@app.CoverLetter</td>
-                        <td>@app.Status</td>
-                        <td>
-                            <form asp-action="UpdateStatus" method="post" class="d-inline">
-                                <input type="hidden" name="id" value="@app.Id" />
-                                <button name="status" value="Accepted" class="btn btn-success btn-sm">Accept</button>
-                                <button name="status" value="Rejected" class="btn btn-danger btn-sm">Reject</button>
-                            </form>
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">No applicants yet for this job.</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Applicant</th>
+                            <th>Email</th>
+                            <th>Applied Date</th>
+                            <th>Cover Letter</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int counter = 1;
+                        }
+                        @foreach (var app in Model)
+                        {
+                            <tr>
+                                <td>@counter</td>
+                                <td>@app.User?.UserName</td>
+                                <td>@app.User?.Email</td>
+                                <td>@app.AppliedDate.ToString("yyyy-MM-dd")</td>
+                                <td style="max-width: 250px; text-align: left;">
+                                    @if (!string.IsNullOrWhiteSpace(app.CoverLetter))
+                                    {
+                                        @app.CoverLetter
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">No message provided</span>
+                                    }
+                            </td>
+
+                            <td>
+                                <span class="badge
+                                            @(app.Status == "Pending" ? "bg-warning text-dark" :
+                                                                                app.Status == "Accepted" ? "bg-success" : "bg-danger")">
+                                @app.Status
+                            </span>
                         </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+                        <td>
+                            @if (app.Status == "Pending")
+                                    {
+                                        <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                            <input type="hidden" name="id" value="@app.Id" />
+                                            <button name="status" value="Accepted" class="btn btn-success btn-sm me-1">
+                                                <i class="fa-solid fa-check"></i> Accept
+                                            </button>
+                                            <button name="status" value="Rejected" class="btn btn-danger btn-sm">
+                                                <i class="fa-solid fa-xmark"></i> Reject
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No actions</span>
+                                    }
+                                </td>
+                            </tr>
+                            counter++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
 </div>

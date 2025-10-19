@@ -1,0 +1,113 @@
+﻿@model JobPortalSystem.ViewModels.CompanyStatsViewModel
+@{
+    ViewData["Title"] = "Company Dashboard";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">
+            <i class="fa-solid fa-chart-line me-2"></i>
+            @Model.CompanyName Dashboard
+        </h2>
+        <a asp-controller="Job" asp-action="GetAll" class="btn btn-outline-primary">
+            <i class="fa-solid fa-briefcase me-1"></i> Manage Jobs
+        </a>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row text-center g-3">
+        <div class="col-md-3">
+            <div class="card shadow-sm border-primary border-2">
+                <div class="card-body">
+                    <h5>Total Jobs</h5>
+                    <h2 class="text-primary">@Model.TotalJobs</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-success border-2">
+                <div class="card-body">
+                    <h5>Active Jobs</h5>
+                    <h2 class="text-success">@Model.ActiveJobs</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-secondary border-2">
+                <div class="card-body">
+                    <h5>Closed Jobs</h5>
+                    <h2 class="text-secondary">@Model.ClosedJobs</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card shadow-sm border-info border-2">
+                <div class="card-body">
+                    <h5>Total Applicants</h5>
+                    <h2 class="text-info">@Model.TotalApplicants</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Applications Breakdown -->
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="card shadow-sm p-4">
+                <h5 class="text-center text-primary">Applicants Summary</h5>
+                <ul class="list-group list-group-flush mt-3">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>✅ Accepted Applicants</span>
+                        <span class="fw-bold text-success">@Model.AcceptedApplicants</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>⏳ Pending Applicants</span>
+                        <span class="fw-bold text-warning">@Model.PendingApplicants</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>❌ Rejected Applicants</span>
+                        <span class="fw-bold text-danger">@Model.RejectedApplicants</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow-sm p-4">
+                <h5 class="text-center text-primary mb-3">Applicants Overview</h5>
+                <canvas id="applicantsChart" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('applicantsChart').getContext('2d');
+        const applicantsChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Accepted', 'Pending', 'Rejected'],
+                datasets: [{
+                    data: [@Model.AcceptedApplicants, @Model.PendingApplicants, @Model.RejectedApplicants],
+                    backgroundColor: ['#28a745', '#ffc107', '#dc3545'],
+                    borderWidth: 2,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { font: { size: 14 } }
+                    },
+                    title: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+}

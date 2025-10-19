@@ -28,15 +28,15 @@ namespace JobPortalSystem.Controllers
 
             IEnumerable<Job> jobs;
 
-            if (userRole?.ToLower()=="admin")
+            if (userRole?.ToLower() == "admin" || userRole?.ToLower() == "jobseeker")
             {
                 jobs = await JobRepo.GetJobsWithCategoriesAsync();
             }
             else
             {
-              jobs = await JobRepo.GetJobsByUserAsync(userId);
-
+                jobs = await JobRepo.GetJobsByUserAsync(userId);
             }
+
             return View("ShowAllJobs", jobs);
         }
 
@@ -141,6 +141,16 @@ namespace JobPortalSystem.Controllers
             return RedirectToAction("GetAll");
 
 
+        }
+        //زودت دي
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var job = await JobRepo.GetJobWithCategoryAsync(id);
+            if (job == null)
+                return NotFound();
+
+            return View(job);
         }
 
     }

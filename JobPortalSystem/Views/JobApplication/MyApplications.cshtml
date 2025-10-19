@@ -1,37 +1,65 @@
 ﻿@model IEnumerable<JobPortalSystem.Models.JobApplication>
 @{
-    ViewBag.Title = "My Applications";
+    ViewData["Title"] = "My Applications";
 }
 
-<div class="container mt-4">
-    <h2>My Applications</h2>
+<div class="container my-5">
+    <div class="card shadow-sm p-4">
+        <h3 class="text-primary mb-4">
+            <i class="fa-solid fa-briefcase me-2"></i> My Job Applications
+        </h3>
 
-    @if (!Model.Any())
-    {
-        <p>You haven’t applied to any jobs yet.</p>
-    }
-    else
-    {
-        <table class="table table-bordered mt-3">
-            <thead>
-                <tr>
-                    <th>Job Title</th>
-                    <th>Applied Date</th>
-                    <th>Status</th>
-                    <th>Cover Letter</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var app in Model)
-                {
-                    <tr>
-                        <td>@app.Job?.Title</td>
-                        <td>@app.AppliedDate.ToShortDateString()</td>
-                        <td>@app.Status</td>
-                        <td>@app.CoverLetter</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info text-center py-4">
+                <i class="fa-solid fa-circle-info me-2"></i>
+                You haven’t applied to any jobs yet.
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-striped align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Applied Date</th>
+                            <th>Status</th>
+                            <th>Cover Letter</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var app in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@app.Job?.Title</strong>
+                                </td>
+                                <td>@app.Job?.PostedUser?.CompanyName</td>
+                                <td>@app.AppliedDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <span class="badge
+                                                @(app.Status == "Pending" ? "bg-warning text-dark" :
+                                                                                    app.Status == "Accepted" ? "bg-success" : "bg-danger")">
+                                @app.Status
+                            </span>
+                        </td>
+                        <td style="max-width: 250px; text-align: left;">
+                            @if (!string.IsNullOrWhiteSpace(app.CoverLetter))
+                                    {
+                                        @app.CoverLetter
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">No cover letter provided</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
 </div>

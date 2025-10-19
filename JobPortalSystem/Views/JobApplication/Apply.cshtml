@@ -1,22 +1,46 @@
 ﻿@model JobPortalSystem.Models.JobApplication
 @{
-    ViewBag.Title = "Apply for Job";
+    ViewData["Title"] = "Apply for Job";
     var job = ViewBag.Job as JobPortalSystem.Models.Job;
 }
 
-<div class="container mt-4">
-    <h2>Apply for: @job?.Title</h2>
-
-    <form asp-action="Apply" method="post">
-        <input type="hidden" asp-for="JobId" />
+<div class="container my-5">
+    <div class="card shadow-sm p-4">
+        <h3 class="text-primary mb-4">
+            <i class="fa-solid fa-briefcase me-2"></i> Apply for: <strong>@job?.Title</strong>
+        </h3>
 
         <div class="mb-3">
-            <label>Cover Letter</label>
-            <textarea asp-for="CoverLetter" class="form-control" rows="5"></textarea>
-            <span asp-validation-for="CoverLetter" class="text-danger"></span>
+            <p>
+                <strong>Location:</strong> @job?.Location <br />
+                <strong>Salary:</strong> @job?.Salary.ToString("C0") <br />
+                <strong>Experience Required:</strong> @job?.Experience <br />
+                <strong>Expiry Date:</strong> @job?.ExpiryDate.ToString("yyyy-MM-dd")
+            </p>
         </div>
 
-        <button type="submit" class="btn btn-primary">Submit Application</button>
-        <a asp-controller="Job" asp-action="Details" asp-route-id="@job?.Id" class="btn btn-secondary">Cancel</a>
-    </form>
+        <form asp-action="Apply" method="post">
+            <input type="hidden" asp-for="JobId" />
+
+            <div class="mb-3">
+                <label asp-for="CoverLetter" class="form-label fw-bold">Cover Letter</label>
+                <textarea asp-for="CoverLetter" class="form-control" rows="6" placeholder="Write a short message to the employer..."></textarea>
+                <span asp-validation-for="CoverLetter" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="fa-solid fa-paper-plane me-1"></i> Submit Application
+                </button>
+
+                <a asp-controller="Job" asp-action="GetAll" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -49,36 +49,43 @@ namespace JobPortalSystem.Controllers
             return View(new JobApplication { JobId = jobId });
         }
 
-        // ✅ تنفيذ التقديم (POST)
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "JobSeeker")]
         public async Task<IActionResult> Apply(JobApplication model)
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
-            var apps = await _jobAppRepo.GetAllAsync();
-            bool alreadyApplied = apps.Any(a => a.JobId == model.JobId && a.UserId == user.Id);
+            // ✅ التأكد أن الوظيفة موجودة
+            var job = await _jobRepo.GetByIdAsync(model.JobId ?? 0);
+            if (job == null) return NotFound("Job not found");
 
-            if (alreadyApplied)
+            // ✅ منع التقديم المكرر
+            var exists = (await _jobAppRepo.GetAllAsync())
+                         .Any(a => a.JobId == job.Id && a.UserId == user.Id);
+            if (exists)
             {
-                ModelState.AddModelError("", "You have already applied to this job.");
-                var job = await _jobRepo.GetByIdAsync(model.JobId ?? 0);
-                ViewBag.Job = job;
-                return View(model);
+                TempData["Error"] = "You already applied to this job.";
+                return RedirectToAction("GetAll", "Job");
             }
 
-            model.UserId = user.Id;
-            model.AppliedDate = DateTime.Now;
-            model.Status = "Pending";
+            // ✅ إنشاء الطلب
+            var newApp = new JobApplication
+            {
+                JobId = job.Id,
+                UserId = user.Id,
+                CoverLetter = model.CoverLetter,
+                Status = "Pending",
+                AppliedDate = DateTime.Now
+            };
 
-            await _jobAppRepo.AddAsync(model);
+            await _jobAppRepo.AddAsync(newApp);
             await _jobAppRepo.SaveAsync();
 
-            TempData["Success"] = "Application submitted successfully!";
-            return RedirectToAction("Details", "Job", new { id = model.JobId });
+            TempData["Success"] = "Application submitted!";
+            return RedirectToAction("MyApplications");
         }
+
 
         // ✅ عرض المتقدمين لوظيفة (Employer)
         [Authorize(Roles = "Employer")]
