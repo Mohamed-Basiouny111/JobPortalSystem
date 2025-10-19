@@ -1,6 +1,7 @@
-﻿@model List<Job>
+﻿@model JobsAndCategoriesVM
 @{
     ViewData["Title"] = "Home Page";
+    SelectList listItems = new SelectList(Model.Categories, "Id", "Name");
 }
 
 <section class="service" id="service">
@@ -11,10 +12,25 @@
         </p>
 
         <div class="container">
-            <div class="form-group mb-2">
-                <label class="ps-2">Search By Name Or Location</label>
-                <input type="text" id="searchBox" placeholder="Search jobs..." class="form-control mb-3" />
-            </div>
+          <div class="row mb-5">
+              <div class="col-md-6">
+                    <div class="form-group flex-grow-1">
+                        <label class="ps-2">Search By Name Or Location</label>
+                        <input type="text" id="searchBox" placeholder="Search jobs..." class="form-control mb-3" />
+                    </div>
+              </div>
+              <div class="col-md-6">
+                    <div class="form-group  flex-grow-1">
+                        @* <label asp-for="Equ"></label> *@
+                        <label class="ps-2 ">Search By Category</label>
+                        <select id="CategorySelect" class="form-select" asp-items="listItems">
+                            <option disabled selected value="0">-- select Category -- </option>
+                            <option  value="-1">All Categories</option>
+                        </select>
+                       
+                    </div>
+              </div>
+          </div>
         </div>
 
         <div class="container jobsContainer">
@@ -24,27 +40,69 @@
 </section>
 
 <script>
-    const searchBox = document.getElementById("searchBox");
-    const jobsContainer = document.querySelector("div.container.jobsContainer");
-    let typingTimer;
-     console.log(searchBox);
-    searchBox.addEventListener("input", () => {
-        clearTimeout(typingTimer);
-        typingTimer = setTimeout(async () => {
-            const query = searchBox.value.trim(); 
-            console.log(query);
-            const response = await fetch(`/Home/SearchForJobAsync?searchWord=${encodeURIComponent(query)}`);
-            const html = await response.text();
-            jobsContainer.innerHTML = html;
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchBox = document.getElementById("searchBox");
+        const categorySelect = document.getElementById("CategorySelect");
+        console.log(categorySelect);
+        const jobsContainer = document.querySelector("div.container.jobsContainer");
+        let typingTimer;
 
-          
-            document.querySelectorAll('.favorite').forEach(icon => {
-                icon.addEventListener('click', () => {
-                    icon.classList.toggle('active');
-                    icon.classList.toggle('fa-solid');
-                    icon.classList.toggle('fa-regular');
-                });
-            });
-        }, 300);
+        
+        if (!searchBox || !jobsContainer) return;
+
+       
+
+        searchBox.addEventListener("input", () => {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(async () => {
+                const query = searchBox.value.trim();
+                console.log("Searching for:", query);
+
+                try {
+                    const response = await fetch(`/Home/SearchForJob?searchWord=${encodeURIComponent(query)}`);
+                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+                    const html = await response.text();
+                    jobsContainer.innerHTML = html;
+
+                    // تفعيل حدث الـ favorite بعد التحديث
+                    document.querySelectorAll('.favorite').forEach(icon => {
+                        icon.addEventListener('click', () => {
+                            icon.classList.toggle('active');
+                            icon.classList.toggle('fa-solid');
+                            icon.classList.toggle('fa-regular');
+                        });
+                    });
+                } catch (err) {
+                    console.error("Search request failed:", err);
+                }
+            }, 300);
+        });
+
+        categorySelect.addEventListener("change" ,async ()=>{
+            
+            const selectedCategoryId = categorySelect.value;
+            console.log("Selected category ID:", selectedCategoryId);
+
+            try {
+
+                    const response = await fetch(`/Home/SearchForJobByCategory?categoryId=${encodeURIComponent(selectedCategoryId)}`);
+                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+                    const html = await response.text();
+                    jobsContainer.innerHTML = html;
+
+                    // تفعيل حدث الـ favorite بعد التحديث
+                    document.querySelectorAll('.favorite').forEach(icon => {
+                        icon.addEventListener('click', () => {
+                            icon.classList.toggle('active');
+                            icon.classList.toggle('fa-solid');
+                            icon.classList.toggle('fa-regular');
+                        });
+                    });
+                } catch (err) {
+                    console.error("Search request failed:", err);
+                }
+        })
     });
 </script>

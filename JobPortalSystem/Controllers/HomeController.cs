@@ -1,5 +1,6 @@
 ﻿using JobPortalSystem.Models;
 using JobPortalSystem.Repository;
+using JobPortalSystem.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
@@ -11,29 +12,62 @@ namespace JobPortalSystem.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IJobRepository jobRepo;
+        private readonly IGenericRepository<JobCategory> categoryRepo;
 
-        public HomeController(ILogger<HomeController> logger, IJobRepository jobRepo)
+        public HomeController(ILogger<HomeController> logger, IJobRepository jobRepo , IGenericRepository<JobCategory> categoryRepo)
         {
             _logger = logger;
             this.jobRepo=jobRepo;
+            this.categoryRepo=categoryRepo;
         }
 
         public async Task<IActionResult> Index()
         {
-            var jobs = await jobRepo.GetJobsWithCategoriesAsync();
-            return View(jobs);
+            //var jobsCategories = await categoryRepo.GetAllAsync();
+            //var jobs = await jobRepo.GetJobsWithCategoriesAsync();
+            JobsAndCategoriesVM jobsAndCategoriesVM = new JobsAndCategoriesVM()
+            {
+                jobs = await jobRepo.GetJobsWithCategoriesAsync(),
+                Categories = await categoryRepo.GetAllAsync()
+            };
+            return View(jobsAndCategoriesVM);
         }
 
         public async Task<IActionResult> SearchForJobAsync(string searchWord)
         {
             var jobs = string.IsNullOrWhiteSpace(searchWord)
                        ? await jobRepo.GetJobsWithCategoriesAsync()
-                       : await jobRepo.GetSearchedJobAsync(searchWord);
-
-            return PartialView("_HomeJobsPV", jobs);
+                       : await jobRepo.GetJobsByNameOrLocAsync(searchWord);
+            JobsAndCategoriesVM jobsAndCategoriesVM = new JobsAndCategoriesVM()
+            {
+                jobs = jobs,
+                Categories = await categoryRepo.GetAllAsync()
+            };
+            return PartialView("_HomeJobsPV", jobsAndCategoriesVM);
         }
      
+        public async Task<IActionResult> SearchForJobByCategory(int categoryId)
+        {
+            IEnumerable<Job> jobs;
+            if (categoryId == -1)
+            {
+                jobs = await jobRepo.GetJobsWithCategoriesAsync();
+            }
+            else
+            {
 
+                 jobs = await jobRepo.SearchJobsByCategoryAsync(categoryId);
+               
+            }
+            JobsAndCategoriesVM jobsAndCategoriesVM = new JobsAndCategoriesVM()
+            {
+                jobs = jobs,
+                Categories = await categoryRepo.GetAllAsync()
+
+            };
+
+            return PartialView("_HomeJobsPV", jobsAndCategoriesVM);
+        }
 
         public IActionResult Privacy()
         {

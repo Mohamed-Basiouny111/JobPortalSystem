@@ -1,7 +1,8 @@
-﻿@model List<Job>
+﻿@model JobsAndCategoriesVM
 
+    
 <div class="row g-4 align-items-stretch">
-    @foreach (var job in Model)
+    @foreach (var job in Model.jobs)
     {
         <div class="col-md-4 col-sm-6 d-flex">
             <div class="card job-card flex-fill d-flex flex-column justify-content-between">
