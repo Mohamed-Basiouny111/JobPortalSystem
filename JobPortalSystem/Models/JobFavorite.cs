@@ -8,14 +8,18 @@ namespace JobPortalSystem.Models
     {
         [Key]
         public int Id { get; set; }
-        [Required]
-        public int? JobId { get; set; }
-        public virtual Job? Job { get; set; }
 
         [Required]
-        public string? UserId { get; set; }
-        public virtual ApplicationUser? User { get; set; }
+        public string UserId { get; set; }
 
+        [ForeignKey("UserId")]
+        public ApplicationUser User { get; set; }
+
+        [Required]
+        public int JobId { get; set; }
+
+        [ForeignKey("JobId")]
+        public Job Job { get; set; }
         //Added by SQL Autmoatic when creating a new JobFavorite
         public DateTime AddedDate { get; set; }
 

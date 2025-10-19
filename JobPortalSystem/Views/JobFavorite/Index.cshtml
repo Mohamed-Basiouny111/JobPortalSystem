@@ -1,0 +1,36 @@
+﻿@model IEnumerable<JobPortalSystem.Models.JobFavorite>
+
+@{
+    ViewData["Title"] = "My Favorite Jobs";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">My Favorite Jobs</h2>
+
+    @if (!Model.Any())
+    {
+        <p class="text-center text-muted">You haven’t added any favorite jobs yet.</p>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-6 mb-3">
+                    <div class="card p-3 shadow-sm">
+                        <h4>@item.Job.Title</h4>
+                        <p>@item.Job.Description</p>
+                        <p><strong>Location:</strong> @item.Job.Location</p>
+
+                        <form asp-action="Remove" method="post">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button class="btn btn-danger btn-sm">
+                                <i class="fa fa-trash"></i> Remove
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

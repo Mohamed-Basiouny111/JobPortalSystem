@@ -19,7 +19,7 @@ namespace JobPortalSystem.Context
         public DbSet<Job> Jobs { get; set; }
         public DbSet<JobCategory> JobCategories { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
-        public DbSet<JobFavorite> jobFavorites { get; set; }
+        public DbSet<JobFavorite> FavoriteJobs { get; set; }
 
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
