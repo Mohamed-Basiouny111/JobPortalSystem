@@ -1,0 +1,88 @@
+﻿@model JobAndCategoriesVM
+
+@{
+
+    SelectList selectListItems = new SelectList(Model.Categories, "Id", "Name");
+}
+<div class="container-md w-100">
+    <div class="row">
+        <div class="form-group col-md-6 mb-3">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+            <label asp-for="Description" class="control-label"></label>
+            <input asp-for="Description" class="form-control" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+            <label asp-for="Requirements" class="control-label"></label>
+            <input asp-for="Requirements" class="form-control" placeholder="Separate requirements with (,)" />
+            <span asp-validation-for="Requirements" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+            <label asp-for="Location" class="control-label"></label>
+            <input asp-for="Location" class="form-control" />
+            <span asp-validation-for="Location" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+            <label asp-for="Experience" class="control-label"></label>
+            <input asp-for="Experience" class="form-control" />
+            <span asp-validation-for="Experience" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+            <label asp-for="Salary" class="control-label"></label>
+            <input asp-for="Salary" class="form-control" />
+            <span asp-validation-for="Salary" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+            <label asp-for="ExpiryDate" class="control-label"></label>
+            <input asp-for="ExpiryDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+            <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+        </div>
+
+        <div class="form-group col-md-6 mb-3">
+            <label asp-for="CategoryId" class="control-label"></label>
+            <select asp-for="CategoryId" class="form-select" asp-items="selectListItems">
+                <option value="0" disabled selected>-- Select Category --</option>
+            </select>
+            <span asp-validation-for="CategoryId" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .form-group {
+        display: flex;
+        flex-direction: column; /* الليبل فوق الانبت */
+    }
+
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .form-group .form-control,
+        .form-group .form-select {
+            width: 100%;
+        }
+
+        .form-group .text-danger {
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+
+
+  
+
+   
+</style>

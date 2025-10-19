@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using JobPortalSystem.CustomValidation;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JobPortalSystem.Models
@@ -8,7 +9,10 @@ namespace JobPortalSystem.Models
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
+
+        [UniqueCategoryName]
         public string Name { get; set; }
 
         //Navigation Properties

@@ -223,6 +223,12 @@ namespace JobPortalSystem.Controllers
 
             return View();
         }
+
+
+        public IActionResult Profile()
+        {
+            return View("Profile");
+        }
     }
 
 }
