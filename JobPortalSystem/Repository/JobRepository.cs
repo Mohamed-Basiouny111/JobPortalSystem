@@ -35,5 +35,19 @@ namespace JobPortalSystem.Repository
                                 .Include(j => j.Category)
                                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Job>> GetSearchedJobAsync(string Searchedvalue)
+        {
+           
+
+            Searchedvalue = Searchedvalue.Trim().ToLower();
+
+            return await context.Jobs
+                 .Include(j => j.Category)
+                 .Include(j => j.PostedUser)
+                 .Where(j => j.Title.ToLower().Contains(Searchedvalue) || j.Location.ToLower().Contains(Searchedvalue))
+                 .ToListAsync();
+
+        }
     }
 }

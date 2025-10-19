@@ -3,6 +3,7 @@ using JobPortalSystem.Repository;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace JobPortalSystem.Controllers
 {
@@ -17,14 +18,22 @@ namespace JobPortalSystem.Controllers
             this.jobRepo=jobRepo;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-
-            var jobs = jobRepo.GetJobsWithCategoriesAsync().Result;
+            var jobs = await jobRepo.GetJobsWithCategoriesAsync();
             return View(jobs);
-
-
         }
+
+        public async Task<IActionResult> SearchForJobAsync(string searchWord)
+        {
+            var jobs = string.IsNullOrWhiteSpace(searchWord)
+                       ? await jobRepo.GetJobsWithCategoriesAsync()
+                       : await jobRepo.GetSearchedJobAsync(searchWord);
+
+            return PartialView("_HomeJobsPV", jobs);
+        }
+     
+
 
         public IActionResult Privacy()
         {
