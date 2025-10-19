@@ -1,0 +1,50 @@
+﻿@model IEnumerable<JobPortalSystem.Models.JobApplication>
+@{
+    ViewBag.Title = "Applicants";
+}
+
+<div class="container mt-4">
+    <h2>Applicants</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <p>No applicants yet for this job.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Applicant</th>
+                    <th>Date</th>
+                    <th>Cover Letter</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var app in Model)
+                {
+                    <tr>
+                        <td>@app.User?.UserName</td>
+                        <td>@app.AppliedDate.ToShortDateString()</td>
+                        <td>@app.CoverLetter</td>
+                        <td>@app.Status</td>
+                        <td>
+                            <form asp-action="UpdateStatus" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@app.Id" />
+                                <button name="status" value="Accepted" class="btn btn-success btn-sm">Accept</button>
+                                <button name="status" value="Rejected" class="btn btn-danger btn-sm">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

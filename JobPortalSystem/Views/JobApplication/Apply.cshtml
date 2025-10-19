@@ -1,0 +1,22 @@
+﻿@model JobPortalSystem.Models.JobApplication
+@{
+    ViewBag.Title = "Apply for Job";
+    var job = ViewBag.Job as JobPortalSystem.Models.Job;
+}
+
+<div class="container mt-4">
+    <h2>Apply for: @job?.Title</h2>
+
+    <form asp-action="Apply" method="post">
+        <input type="hidden" asp-for="JobId" />
+
+        <div class="mb-3">
+            <label>Cover Letter</label>
+            <textarea asp-for="CoverLetter" class="form-control" rows="5"></textarea>
+            <span asp-validation-for="CoverLetter" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit Application</button>
+        <a asp-controller="Job" asp-action="Details" asp-route-id="@job?.Id" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

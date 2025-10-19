@@ -1,0 +1,81 @@
+﻿@model JobPortalSystem.ViewModels.AdminStatsViewModel
+@{
+    ViewBag.Title = "Admin Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Website Statistics</h2>
+
+    <div class="row text-center">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3">
+                <h4>Total Users</h4>
+                <h2>@Model.TotalUsers</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3">
+                <h4>Employers</h4>
+                <h2>@Model.TotalEmployers</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3">
+                <h4>Job Seekers</h4>
+                <h2>@Model.TotalJobSeekers</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm p-3">
+                <h4>Total Jobs</h4>
+                <h2>@Model.TotalJobs</h2>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row text-center">
+        <div class="col-md-4 mb-3">
+            <div class="card p-3 bg-light">
+                <h5>Active Jobs</h5>
+                <h3>@Model.ActiveJobs</h3>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card p-3 bg-light">
+                <h5>Closed Jobs</h5>
+                <h3>@Model.ClosedJobs</h3>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card p-3 bg-light">
+                <h5>Total Applications</h5>
+                <h3>@Model.TotalApplications</h3>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row text-center">
+        <div class="col-md-4 mb-3">
+            <div class="card p-3 bg-warning text-white">
+                <h5>Pending</h5>
+                <h3>@Model.PendingApplications</h3>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card p-3 bg-success text-white">
+                <h5>Accepted</h5>
+                <h3>@Model.AcceptedApplications</h3>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card p-3 bg-danger text-white">
+                <h5>Rejected</h5>
+                <h3>@Model.RejectedApplications</h3>
+            </div>
+        </div>
+    </div>
+</div>
