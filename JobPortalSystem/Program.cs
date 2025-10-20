@@ -34,13 +34,13 @@ namespace JobPortalSystem
                 op.UseSqlServer(builder.Configuration.GetConnectionString("Connection"));
             });
 
-            builder.Services.AddScoped<IGenericRepository<Job> , JobRepository>();
+            builder.Services.AddScoped<IGenericRepository<Job>, JobRepository>();
             builder.Services.AddScoped<IJobRepository, JobRepository>();
-            builder.Services.AddScoped<IGenericRepository<JobApplication> , JobApplicationRepository>();
-            builder.Services.AddScoped<IGenericRepository<JobCategory> , JobCategoryRepository>();
+            builder.Services.AddScoped<IGenericRepository<JobApplication>, JobApplicationRepository>();
+            builder.Services.AddScoped<IGenericRepository<JobCategory>, JobCategoryRepository>();
             //builder.Services.AddScoped<IGenericRepository<JobFavorite>, JobFavoriteRepository>();
-            builder.Services.AddScoped<JobFavoriteController>();
-
+            // Add this with your other service registrations
+            builder.Services.AddScoped<IJobFavoriteRepository, JobFavoriteRepository>();
 
             var app = builder.Build();
 

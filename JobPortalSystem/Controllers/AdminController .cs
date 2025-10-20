@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobPortalSystem.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "admin")] // FIXED: Use lowercase "admin"
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -17,14 +17,13 @@ namespace JobPortalSystem.Controllers
             _roleManager = roleManager;
         }
 
-        // ✅ List all JobSeekers
         public async Task<IActionResult> JobSeekers()
         {
-            var users = await _userManager.GetUsersInRoleAsync("JobSeeker");
+            // FIXED: Use the same role name as in AccountController
+            var users = await _userManager.GetUsersInRoleAsync("Job Seeker");
             return View(users);
         }
 
-        // ✅ Edit User (GET)
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -37,7 +36,6 @@ namespace JobPortalSystem.Controllers
             return View(user);
         }
 
-        // ✅ Edit User (POST)
         [HttpPost]
         public async Task<IActionResult> Edit(ApplicationUser model)
         {
@@ -48,7 +46,6 @@ namespace JobPortalSystem.Controllers
             user.UserName = model.UserName;
             user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
-            // add more fields as you want to edit
 
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
@@ -58,6 +55,20 @@ namespace JobPortalSystem.Controllers
                 ModelState.AddModelError("", error.Description);
 
             return View(model);
+        }
+
+        // ADD THIS: Debug action to check your roles
+        [AllowAnonymous]
+        public async Task<IActionResult> CheckMyRoles()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                var roles = await _userManager.GetRolesAsync(user);
+
+                return Content($"User: {user.UserName}, Roles: {string.Join(", ", roles)}");
+            }
+            return Content("Not authenticated");
         }
     }
 }
