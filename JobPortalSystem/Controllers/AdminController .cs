@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobPortalSystem.Controllers
 {
-    [Authorize(Roles = "admin")] // FIXED: Use lowercase "admin"
+    [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -17,58 +17,77 @@ namespace JobPortalSystem.Controllers
             _roleManager = roleManager;
         }
 
-        public async Task<IActionResult> JobSeekers()
+        // ✅ Show all users
+        public IActionResult Users()
         {
-            // FIXED: Use the same role name as in AccountController
-            var users = await _userManager.GetUsersInRoleAsync("Job Seeker");
+            var users = _userManager.Users.ToList();
             return View(users);
         }
 
-        public async Task<IActionResult> Edit(string id)
+        // ✅ Edit roles for specific user
+        public async Task<IActionResult> EditRoles(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == null)
                 return NotFound();
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
                 return NotFound();
 
-            return View(user);
-        }
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var allRoles = _roleManager.Roles.ToList();
 
-        [HttpPost]
-        public async Task<IActionResult> Edit(ApplicationUser model)
-        {
-            var user = await _userManager.FindByIdAsync(model.Id);
-            if (user == null)
-                return NotFound();
-
-            user.UserName = model.UserName;
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
-
-            var result = await _userManager.UpdateAsync(user);
-            if (result.Succeeded)
-                return RedirectToAction("JobSeekers");
-
-            foreach (var error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+            var model = new EditUserRolesViewModel
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                CurrentRoles = userRoles,
+                AvailableRoles = allRoles.Select(r => r.Name).ToList()
+            };
 
             return View(model);
         }
 
-        // ADD THIS: Debug action to check your roles
-        [AllowAnonymous]
-        public async Task<IActionResult> CheckMyRoles()
+        [HttpPost]
+        public async Task<IActionResult> EditRoles(EditUserRolesViewModel model)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                var user = await _userManager.GetUserAsync(User);
-                var roles = await _userManager.GetRolesAsync(user);
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+                return NotFound();
 
-                return Content($"User: {user.UserName}, Roles: {string.Join(", ", roles)}");
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            // Remove all current roles
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
+            if (!removeResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to remove old roles");
+                return View(model);
             }
-            return Content("Not authenticated");
+
+            // Add selected roles
+            if (model.SelectedRoles != null && model.SelectedRoles.Any())
+            {
+                var addResult = await _userManager.AddToRolesAsync(user, model.SelectedRoles);
+                if (!addResult.Succeeded)
+                {
+                    ModelState.AddModelError("", "Failed to assign new roles");
+                    return View(model);
+                }
+            }
+
+            return RedirectToAction("Users");
         }
+    }
+
+    // ✅ Helper ViewModel
+    public class EditUserRolesViewModel
+    {
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+
+        public IList<string> CurrentRoles { get; set; } = new List<string>();
+        public List<string> AvailableRoles { get; set; } = new();
+        public List<string> SelectedRoles { get; set; } = new();
     }
 }
