@@ -5,32 +5,76 @@
 }
 
 <div class="container mt-5">
-    <h2 class="mb-4 text-center">My Favorite Jobs</h2>
+    <h2 class="mb-4">My Favorite Jobs</h2>
 
     @if (!Model.Any())
     {
-        <p class="text-center text-muted">You haven’t added any favorite jobs yet.</p>
+        <p>You haven't added any jobs to favorites yet.</p>
     }
     else
     {
         <div class="row">
-            @foreach (var item in Model)
+            @foreach (var favorite in Model)
             {
-                <div class="col-md-6 mb-3">
-                    <div class="card p-3 shadow-sm">
-                        <h4>@item.Job.Title</h4>
-                        <p>@item.Job.Description</p>
-                        <p><strong>Location:</strong> @item.Job.Location</p>
+                <div class="col-md-4 col-sm-6 d-flex">
+                    <div class="card job-card flex-fill d-flex flex-column justify-content-between">
+                        <div class="job-details">
+                            <!-- Love Icon/Remove Button -->
+                            <div class="text-end mb-2">
+                                <button class="btn btn-danger btn-sm remove-fav-btn"
+                                        data-jobid="@favorite.JobId"
+                                        title="Remove from favorites">
+                                    <i class="fa-solid fa-heart-crack"></i> Remove
+                                </button>
+                            </div>
 
-                        <form asp-action="Remove" method="post">
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <button class="btn btn-danger btn-sm">
-                                <i class="fa fa-trash"></i> Remove
-                            </button>
-                        </form>
+                            <div class="job-title">
+                                <i class="fa-solid fa-tag"></i>
+                                <strong>@favorite.Job.Title</strong>
+                            </div>
+                            <div><i class="fa-solid fa-building"></i><strong>Company:</strong> @favorite.Job.PostedUser?.CompanyName</div>
+                            <div><i class="fa-solid fa-city"></i><strong>Location:</strong> @favorite.Job.Location</div>
+                            <div><i class="fa-solid fa-gear"></i><strong>Requirements:</strong> @favorite.Job.Requirements</div>
+                            <div><i class="fa-solid fa-medal"></i><strong>Experience:</strong> @favorite.Job.Experience</div>
+                            <div><i class="fa-solid fa-calendar-days"></i><strong>PostedDate:</strong> @favorite.Job.PostedDate.ToString("MMM dd, yyyy")</div>
+                            <div><i class="fa-solid fa-folder-tree"></i><strong>Category:</strong> @favorite.Job.Category?.Name</div>
+                            <div><i class="fa-solid fa-money-bill-trend-up"></i><strong>Salary:</strong> @favorite.Job.Salary</div>
+                        </div>
                     </div>
                 </div>
             }
         </div>
     }
 </div>
+
+@section Scripts {
+    <script>
+        $(document).on('click', '.remove-fav-btn', function () {
+            var btn = $(this);
+            var jobId = btn.data('jobid');
+            var card = btn.closest('.col-md-4'); // Target the card container
+
+            $.ajax({
+                url: '/JobFavorite/Toggle',
+                type: 'POST',
+                data: { jobId: jobId },
+                success: function (res) {
+                    if (res.success && !res.isFavorite) {
+                        // Fade out and remove the entire job card
+                        card.fadeOut(300, function () {
+                            $(this).remove();
+
+                            // If no favorites left, show message
+                            if ($('.job-card').length === 0) {
+                                $('.row').html('<p>You haven\'t added any jobs to favorites yet.</p>');
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    alert('Error removing job from favorites.');
+                }
+            });
+        });
+    </script>
+}

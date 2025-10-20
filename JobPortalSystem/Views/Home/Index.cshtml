@@ -45,8 +45,8 @@
                                     <a asp-action="" asp-controller="" class="btn btn-warning text-white">Apply Job</a>
                                 }
 
-                               
-                                <i class="fa-regular fa-heart fa-xl favorite"></i>
+
+                                <i class="fa @(job.IsFavorite ? "fa-heart text-danger" : "fa-heart-o")"></i>
                             </div>
 
                         </div>
