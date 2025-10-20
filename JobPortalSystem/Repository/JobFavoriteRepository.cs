@@ -7,63 +7,65 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace JobPortalSystem.Controllers
+
+
+namespace JobPortalSystem.Repository
 {
     [Authorize]
-    public class JobFavoriteController : Controller
+    public class JobFavoriteRepository : Controller
     {
         private readonly JobPortalContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public JobFavoriteController(JobPortalContext context, UserManager<ApplicationUser> userManager)
+        public JobFavoriteRepository(JobPortalContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
         }
 
+        // Show all favorite jobs for the logged-in user
         public async Task<IActionResult> Index()
         {
             var user = await _userManager.GetUserAsync(User);
 
-            var favoriteJobs = await _context.FavoriteJobs
+            var favorites = await _context.FavoriteJobs
                 .Include(f => f.Job)
-                    .ThenInclude(j => j.PostedUser)
-                .Include(f => f.Job)
-                    .ThenInclude(j => j.Category)
                 .Where(f => f.UserId == user.Id)
                 .ToListAsync();
 
-            return View(favoriteJobs);
+            return View(favorites);
         }
 
+        // Add a job to favorites
         [HttpPost]
-        public async Task<IActionResult> Toggle(int jobId)
+        public async Task<IActionResult> Add(int jobId)
         {
             var user = await _userManager.GetUserAsync(User);
+            bool alreadyExists = await _context.FavoriteJobs
+                .AnyAsync(f => f.UserId == user.Id && f.JobId == jobId);
 
-            var existing = await _context.FavoriteJobs
-                .FirstOrDefaultAsync(f => f.UserId == user.Id && f.JobId == jobId);
-
-            bool isFavorite;
-
-            if (existing == null)
+            if (!alreadyExists)
             {
-                _context.FavoriteJobs.Add(new JobFavorite
-                {
-                    UserId = user.Id,
-                    JobId = jobId
-                });
-                isFavorite = true;
-            }
-            else
-            {
-                _context.FavoriteJobs.Remove(existing);
-                isFavorite = false;
+                var favorite = new JobFavorite { UserId = user.Id, JobId = jobId };
+                _context.FavoriteJobs.Add(favorite);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", "Job", new { id = jobId });
+        }
 
-            return Json(new { success = true, isFavorite });
+        // Remove a favorite job
+        [HttpPost]
+        public async Task<IActionResult> Remove(int id)
+        {
+            var favorite = await _context.FavoriteJobs.FindAsync(id);
+            if (favorite != null)
+            {
+                _context.FavoriteJobs.Remove(favorite);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

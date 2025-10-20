@@ -80,14 +80,6 @@
                                 <i class="fa-regular fa-chart-bar"></i>
                                 <span>Profile</span>
                             </li>
-                    @if (User.IsInRole("admin"))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Admin" asp-action="JobSeekers">
-                                Manage JobSeekers
-                            </a>
-                        </li>
-                    }
 
                             @if (User.IsInRole("admin") || User.IsInRole("employer"))
                             {
