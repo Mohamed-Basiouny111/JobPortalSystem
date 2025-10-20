@@ -1,80 +1,54 @@
-﻿using JobPortalSystem.Context;
-using JobPortalSystem.Models;
+﻿using JobPortalSystem.Models;
 using JobPortalSystem.Repository;
 using JobPortalSystem.ViewModels;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace JobPortalSystem.Controllers
 {
+
     public class JobController : Controller
     {
         private readonly IGenericRepository<JobCategory> jobCatgRepo;
-        private readonly IJobRepository JobRepo;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly JobPortalContext _context;
+        public IJobRepository JobRepo { get; }
 
-        public JobController(
-            IJobRepository jobRepo,
-            IGenericRepository<JobCategory> jobCatgRepo,
-            UserManager<ApplicationUser> userManager,
-            JobPortalContext context)
+        public JobController(IJobRepository jobRepo, IGenericRepository<JobCategory> jobCatgRepo)
         {
-            JobRepo = jobRepo;
-            this.jobCatgRepo = jobCatgRepo;
-            _userManager = userManager;
-            _context = context;
+            this.JobRepo=jobRepo;
+            this.jobCatgRepo=jobCatgRepo;
         }
 
-        // ✅ عرض جميع الوظائف + تحديد المفضلة (❤️)
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var user = await _userManager.GetUserAsync(User);
-
-            if (user == null)
-            {
-                ViewBag.FavoriteJobIds = new List<int>();
-            }
-            else
-            {
-                ViewBag.FavoriteJobIds = await _context.FavoriteJobs
-                    .Where(f => f.UserId == user.Id)
-                    .Select(f => f.JobId)
-                    .ToListAsync();
-            }
-
+            //string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             string userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
             IEnumerable<Job> jobs;
 
-            if (userRole?.ToLower() == "admin")
+            if (userRole?.ToLower()=="admin")
             {
                 jobs = await JobRepo.GetJobsWithCategoriesAsync();
             }
             else
             {
-                jobs = await JobRepo.GetJobsByUserAsync(userId);
-            }
+              jobs = await JobRepo.GetJobsByUserAsync(userId);
 
+            }
             return View("ShowAllJobs", jobs);
         }
 
-        // ✅ صفحة إضافة وظيفة
         [HttpGet]
         public async Task<IActionResult> AddJob()
         {
-            var job_Categ_VM = new JobAndCategoriesVM();
+            JobAndCategoriesVM job_Categ_VM = new JobAndCategoriesVM();
             var categories = (await jobCatgRepo.GetAllAsync()).ToList();
-            job_Categ_VM.Categories = categories;
+            job_Categ_VM.Categories =categories;
             return View(job_Categ_VM);
         }
 
-        // ✅ إضافة وظيفة جديدة
         [HttpPost]
         public async Task<IActionResult> AddJob(JobAndCategoriesVM job_Categ_VM)
         {
@@ -93,31 +67,31 @@ namespace JobPortalSystem.Controllers
                     CategoryId = job_Categ_VM.CategoryId,
                     PostedByUserId = userId,
                     ExpiryDate = job_Categ_VM.ExpiryDate.Date,
-                };
 
+                };
                 await JobRepo.AddAsync(newJob);
                 await JobRepo.SaveAsync();
-                TempData["SuccessMessage"] = "Job added successfully!";
+                TempData["SuccessMessage"] = "Job added successfully!";     
                 return RedirectToAction("GetAll");
-            }
 
+
+            }
             var categories = (await jobCatgRepo.GetAllAsync()).ToList();
-            job_Categ_VM.Categories = categories;
+            job_Categ_VM.Categories =categories;
             return View(job_Categ_VM);
         }
 
-        // ✅ تعديل وظيفة
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
+
+
             var job = await JobRepo.GetByIdAsync(id);
             if (job == null)
                 return NotFound();
-
             var categories = (await jobCatgRepo.GetAllAsync()).ToList();
-            var job_categ_VM = new JobAndCategoriesVM()
+            JobAndCategoriesVM job_categ_VM = new JobAndCategoriesVM()
             {
-                Id = job.Id,
                 Title = job.Title,
                 Location = job.Location,
                 Description = job.Description,
@@ -128,8 +102,8 @@ namespace JobPortalSystem.Controllers
                 Categories = categories,
                 ExpiryDate = job.ExpiryDate,
             };
-
             return View("EditJob", job_categ_VM);
+
         }
 
         [HttpPost]
@@ -139,36 +113,35 @@ namespace JobPortalSystem.Controllers
             if (ModelState.IsValid)
             {
                 targetjob.Title = job.Title;
-                targetjob.Location = job.Location;
+                targetjob.Location=job.Location;
                 targetjob.Description = job.Description;
                 targetjob.Salary = job.Salary;
                 targetjob.CategoryId = job.CategoryId;
                 targetjob.Experience = job.Experience;
                 targetjob.Requirements = job.Requirements;
                 targetjob.ExpiryDate = job.ExpiryDate.Date;
-
                 JobRepo.Update(targetjob);
                 await JobRepo.SaveAsync();
-
                 TempData["SuccessMessage"] = "Job updated successfully!";
                 return RedirectToAction("GetAll");
             }
-
             return View(job);
         }
 
-        // ✅ حذف وظيفة
         public async Task<IActionResult> Delete(int id)
         {
+
             var job = await JobRepo.GetByIdAsync(id);
             if (job == null)
                 return NotFound();
 
             await JobRepo.DeleteAsync(id);
             await JobRepo.SaveAsync();
-
             TempData["SuccessMessage"] = "Job deleted successfully!";
             return RedirectToAction("GetAll");
+
+
         }
+
     }
 }
