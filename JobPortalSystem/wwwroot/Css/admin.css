@@ -163,7 +163,11 @@ div.dataTables_wrapper div.dataTables_length select {
     position: absolute;
     top: 150px;
     left: 235px;
-    width: 1282px
+    width: 1447px
+}
+.dataTables_wrapper div.row > :nth-child(2) {
+    display: flex;
+    justify-content: end;
 }
 @media (max-width: 768px) {
     div .dataTables_wrapper div.dataTables_info {

@@ -1,11 +1,8 @@
-﻿@model List<Job>
+﻿@model JobsAndCategoriesVM
 @{
     ViewData["Title"] = "Home Page";
+    SelectList listItems = new SelectList(Model.Categories, "Id", "Name");
 }
-
-
-
-
 
 <section class="service" id="service">
     <div class="reveal">
@@ -13,60 +10,104 @@
         <p class="section-para fs-5">
             Explore the latest job opportunities from top employers and find the role that fits your career goals.
         </p>
+
         <div class="container">
-            <div class="row g-4 align-items-stretch">
-                @foreach (var job in Model)
-                {
-                    <div class="col-md-4 col-sm-6 d-flex">
-                        <div class="card job-card flex-fill d-flex flex-column justify-content-between">
+          <div class="row mb-5">
+              <div class="col-md-6">
+                    <div class="form-group flex-grow-1">
+                        <label class="ps-2">Search By Name Or Location</label>
+                        <input type="text" id="searchBox" placeholder="Search jobs..." class="form-control mb-3" />
+                    </div>
+              </div>
+              <div class="col-md-6">
+                    <div class="form-group  flex-grow-1">
+                        @* <label asp-for="Equ"></label> *@
+                        <label class="ps-2 ">Search By Category</label>
+                        <select id="CategorySelect" class="form-select" asp-items="listItems">
+                            <option disabled selected value="0">-- select Category -- </option>
+                            <option  value="-1">All Categories</option>
+                        </select>
+                       
+                    </div>
+              </div>
+          </div>
+        </div>
 
-                            <div class="job-details">
+        <div class="container jobsContainer">
+            <partial name="_HomeJobsPV" model="Model" />
+        </div>
+    </div>
+</section>
 
-                                <div class="job-title">
-                                    <i class="fa-solid fa-tag"></i>
-                                    <strong>@job.Title</strong>
-                                </div>
-                                <div><i class="fa-solid fa-building"></i><strong>Company:</strong> @job.PostedUser?.CompanyName</div>
-                                <div><i class="fa-solid fa-city"></i><strong>Location:</strong> @job.Location</div>
-                                <div><i class="fa-solid fa-gear"></i><strong>Requirements:</strong> @job.Requirements</div>
-                                <div><i class="fa-solid fa-medal"></i><strong>Experience:</strong> @job.Experience</div>
-                                <div><i class="fa-solid fa-calendar-days"></i><strong>PostedDate:</strong> @job.PostedDate</div>
-                                <div><i class="fa-solid fa-folder-tree"></i><strong>Category:</strong> @job.Category.Name</div>
-                                <div><i class="fa-solid fa-money-bill-trend-up"></i><strong>Salary:</strong> @job.Salary</div>
-                            </div>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchBox = document.getElementById("searchBox");
+        const categorySelect = document.getElementById("CategorySelect");
+        console.log(categorySelect);
+        const jobsContainer = document.querySelector("div.container.jobsContainer");
+        let typingTimer;
 
-                            <div id="icons" class="d-flex align-items-center justify-content-between mt-3">
-                                @if (User.IsInRole("admin") || User.IsInRole("employer"))
-                                {
-                                    <a asp-action="" asp-controller="" class="btn btn-warning text-white disabled">Apply Job</a>
-                                }
-                                else
-                                {
-                                    <a asp-action="" asp-controller="" class="btn btn-warning text-white">Apply Job</a>
-                                }
-
+        
+        if (!searchBox || !jobsContainer) return;
 
                                 <i class="fa @(job.IsFavorite ? "fa-heart text-danger" : "fa-heart-o")"></i>
                             </div>
 
-                        </div>
-                    </div>
+        searchBox.addEventListener("input", () => {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(async () => {
+                const query = searchBox.value.trim();
+                console.log("Searching for:", query);
+
+                try {
+                    // m4 3aaaaaaaaaayez ba3basa hna y 4abaaaaaaaaaaab
+                    const response = await fetch(`/Home/SearchForJob?searchWord=${encodeURIComponent(query)}`);
+                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+                    const html = await response.text();
+                    jobsContainer.innerHTML = html;
+                     //******************************************************************************* */
+
+                    //  favorite icon
+                    document.querySelectorAll('.favorite').forEach(icon => {
+                        icon.addEventListener('click', () => {
+                            icon.classList.toggle('active');
+                            icon.classList.toggle('fa-solid');
+                            icon.classList.toggle('fa-regular');
+                        });
+                    });
+                } catch (err) {
+                    console.error("Search request failed:", err);
                 }
-            </div>
-        </div>
+            }, 300);
+        });
 
-    </div>
-</section>
+        categorySelect.addEventListener("change" ,async ()=>{
+            
+            const selectedCategoryId = categorySelect.value;
+            console.log("Selected category ID:", selectedCategoryId);
 
+            try {
+                 // m4 3aaaaaaaaaayez ba3basa hna y 4abaaaaaaaaaaab
+                    const response = await fetch(`/Home/SearchForJobByCategory?categoryId=${encodeURIComponent(selectedCategoryId)}`);
+                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
 
-<script>
-        document.querySelectorAll('.favorite').forEach(icon => {
-      icon.addEventListener('click', () => {
-        icon.classList.toggle('active'); 
-        icon.classList.toggle('fa-solid'); 
-        icon.classList.toggle('fa-regular'); 
-      });
+                    const html = await response.text();
+                    jobsContainer.innerHTML = html;
+                    //******************************************************************************* */
+                    
+                    //  favorite icon
+                    
+                    document.querySelectorAll('.favorite').forEach(icon => {
+                        icon.addEventListener('click', () => {
+                            icon.classList.toggle('active');
+                            icon.classList.toggle('fa-solid');
+                            icon.classList.toggle('fa-regular');
+                        });
+                    });
+                } catch (err) {
+                    console.error("Search request failed:", err);
+                }
+        })
     });
 </script>
-
-
