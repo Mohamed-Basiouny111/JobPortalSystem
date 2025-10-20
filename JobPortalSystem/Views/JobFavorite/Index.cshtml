@@ -5,6 +5,7 @@
 }
 
 <div class="container mt-5">
+<<<<<<< HEAD
     <h2 class="mb-4 text-center">My Favorite Jobs</h2>
 
     @if (!Model.Any())
@@ -29,8 +30,140 @@
                             </button>
                         </form>
                     </div>
+=======
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="fa-solid fa-heart text-danger"></i> My Favorite Jobs
+                </h2>
+                <span class="badge bg-primary fs-6">@Model.Count() jobs</span>
+            </div>
+
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info text-center py-5">
+                    <i class="fa-solid fa-heart-crack fa-3x mb-3 text-muted"></i>
+                    <h4 class="text-muted">No favorite jobs yet</h4>
+                    <p class="text-muted mb-4">Start exploring jobs and add them to your favorites by clicking the heart icon!</p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-search"></i> Browse All Jobs
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    @foreach (var favorite in Model)
+                    {
+                        <div class="col-lg-6 col-md-12 mb-4">
+                            <div class="card h-100 shadow-sm job-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="card-title text-primary">@favorite.Job.Title</h5>
+                                        <button class="btn btn-outline-danger btn-sm favorite-btn favorited"
+                                                data-job-id="@favorite.JobId"
+                                                title="Remove from favorites">
+                                            <i class="fa-solid fa-heart"></i>
+                                        </button>
+                                    </div>
+
+                                    <p class="card-text text-muted mb-3">
+                                        @(favorite.Job.Description.Length > 150 ?
+                                                                        favorite.Job.Description.Substring(0, 150) + "..." :
+                                                                        favorite.Job.Description)
+                            </p>
+
+                                    <div class="job-details">
+                                        <div class="mb-2">
+                                            <i class="fa-solid fa-location-dot text-primary me-2"></i>
+                                            <strong>Location:</strong> @favorite.Job.Location
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="fa-solid fa-money-bill-wave text-success me-2"></i>
+                                            <strong>Salary:</strong> $@favorite.Job.Salary.ToString("N2")
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="fa-solid fa-briefcase text-info me-2"></i>
+                                            <strong>Experience:</strong> @favorite.Job.Experience
+                                        </div>
+                                @if (favorite.Job.Category != null)
+                                        {
+                                            <div class="mb-2">
+                                                <i class="fa-solid fa-tag text-warning me-2"></i>
+                                                <strong>Category:</strong>
+                                                <span class="badge bg-secondary">@favorite.Job.Category.Name</span>
+                                            </div>
+                                        }
+                                        <div class="mb-0">
+                                            <i class="fa-solid fa-calendar text-secondary me-2"></i>
+                                            <strong>Added to favorites:</strong>
+                                            <span class="text-muted">@favorite.AddedDate.ToString("MMM dd, yyyy 'at' hh:mm tt")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent border-top">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">
+                                                <i class="fa-solid fa-user me-1"></i>
+                                                Posted by: <strong>@favorite.Job.PostedUser?.UserName</strong>
+                                            </small>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+>>>>>>> Hossam
                 </div>
             }
         </div>
-    }
+    </div>
 </div>
+<<<<<<< HEAD
+=======
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Remove from favorites on the favorites page
+            $('.favorite-btn').on('click', function () {
+                var button = $(this);
+                var jobId = button.data('job-id');
+                var jobCard = button.closest('.col-lg-6');
+
+                // Show loading
+                button.prop('disabled', true).html('<i class="fa-solid fa-spinner fa-spin"></i>');
+
+                $.post('@Url.Action("RemoveFromFavorites", "JobFavorite")', { jobId: jobId })
+                    .done(function (response) {
+                        if (response.success) {
+                            toastr.success(response.message);
+                            // Animate removal
+                            jobCard.fadeOut(300, function() {
+                                $(this).remove();
+                                // Update count badge
+                                var remainingJobs = $('.col-lg-6').length;
+                                $('.badge').text(remainingJobs + ' jobs');
+
+                                // If no favorites left, show empty state
+                                if (remainingJobs === 0) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            toastr.error(response.message);
+                            button.prop('disabled', false).html('<i class="fa-solid fa-heart"></i>');
+                        }
+                    })
+                    .fail(function () {
+                        toastr.error('An error occurred while removing from favorites');
+                        button.prop('disabled', false).html('<i class="fa-solid fa-heart"></i>');
+                    });
+            });
+        });
+    </script>
+}
+>>>>>>> Hossam

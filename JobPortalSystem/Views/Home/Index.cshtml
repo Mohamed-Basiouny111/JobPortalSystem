@@ -1,7 +1,7 @@
-﻿@model JobsAndCategoriesVM
+﻿@model JobPortalSystem.ViewModels.JobsAndCategoriesVM
+
 @{
     ViewData["Title"] = "Home Page";
-    SelectList listItems = new SelectList(Model.Categories, "Id", "Name");
 }
 
 <section class="service" id="service">
@@ -10,35 +10,58 @@
         <p class="section-para fs-5">
             Explore the latest job opportunities from top employers and find the role that fits your career goals.
         </p>
-
         <div class="container">
-          <div class="row mb-5">
-              <div class="col-md-6">
-                    <div class="form-group flex-grow-1">
-                        <label class="ps-2">Search By Name Or Location</label>
-                        <input type="text" id="searchBox" placeholder="Search jobs..." class="form-control mb-3" />
-                    </div>
-              </div>
-              <div class="col-md-6">
-                    <div class="form-group  flex-grow-1">
-                        @* <label asp-for="Equ"></label> *@
-                        <label class="ps-2 ">Search By Category</label>
-                        <select id="CategorySelect" class="form-select" asp-items="listItems">
-                            <option disabled selected value="0">-- select Category -- </option>
-                            <option  value="-1">All Categories</option>
-                        </select>
-                       
-                    </div>
-              </div>
-          </div>
-        </div>
+            <div class="row g-4 align-items-stretch">
+                @foreach (var job in Model.jobs)
+                {
+                    <div class="col-md-4 col-sm-6 d-flex">
+                        <div class="card job-card flex-fill d-flex flex-column justify-content-between">
+                            <div class="job-details">
+                                <div class="job-title">
+                                    <i class="fa-solid fa-tag"></i>
+                                    <strong>@job.Title</strong>
+                                </div>
+                                <div><i class="fa-solid fa-building"></i><strong>Company:</strong> @job.PostedUser?.CompanyName</div>
+                                <div><i class="fa-solid fa-city"></i><strong>Location:</strong> @job.Location</div>
+                                <div><i class="fa-solid fa-gear"></i><strong>Requirements:</strong> @job.Requirements</div>
+                                <div><i class="fa-solid fa-medal"></i><strong>Experience:</strong> @job.Experience</div>
+                                <div><i class="fa-solid fa-calendar-days"></i><strong>PostedDate:</strong> @job.PostedDate.ToString("MMM dd, yyyy")</div>
+                                <div><i class="fa-solid fa-folder-tree"></i><strong>Category:</strong> @job.Category?.Name</div>
+                                <div><i class="fa-solid fa-money-bill-trend-up"></i><strong>Salary:</strong> $@job.Salary.ToString("N2")</div>
+                            </div>
 
-        <div class="container jobsContainer">
-            <partial name="_HomeJobsPV" model="Model" />
+                            <div id="icons" class="d-flex align-items-center justify-content-between mt-3">
+                                @if (User.IsInRole("admin") || User.IsInRole("employer"))
+                                {
+                                    <a asp-action="" asp-controller="" class="btn btn-warning text-white disabled">Apply Job</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="" asp-controller="" class="btn btn-warning text-white">Apply Job</a>
+                                }
+
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <button class="btn favorite-btn" data-job-id="@job.Id" title="Add to favorites">
+                                        <i class="fa-regular fa-heart fa-xl"></i>
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button class="btn favorite-btn" title="Login to add favorites" disabled>
+                                        <i class="fa-regular fa-heart fa-xl"></i>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </section>
 
+<<<<<<< HEAD
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const searchBox = document.getElementById("searchBox");
@@ -79,34 +102,133 @@
                     console.error("Search request failed:", err);
                 }
             }, 300);
+=======
+@section Scripts {
+    <script>
+        // Initialize favorite buttons when page loads
+        $(document).ready(function() {
+            console.log('Initializing favorite buttons...');
+            initializeFavoriteButtons();
+>>>>>>> Hossam
         });
 
-        categorySelect.addEventListener("change" ,async ()=>{
-            
-            const selectedCategoryId = categorySelect.value;
-            console.log("Selected category ID:", selectedCategoryId);
+        function initializeFavoriteButtons() {
+            // Remove any existing click handlers to prevent duplicates
+            $('.favorite-btn').off('click.favorite');
 
-            try {
-                 // m4 3aaaaaaaaaayez ba3basa hna y 4abaaaaaaaaaaab
-                    const response = await fetch(`/Home/SearchForJobByCategory?categoryId=${encodeURIComponent(selectedCategoryId)}`);
-                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+            // Check initial favorite status for each button
+            $('.favorite-btn').each(function() {
+                var button = $(this);
+                var jobId = button.data('job-id');
 
-                    const html = await response.text();
-                    jobsContainer.innerHTML = html;
-                    //******************************************************************************* */
-                    
-                    //  favorite icon
-                    
-                    document.querySelectorAll('.favorite').forEach(icon => {
-                        icon.addEventListener('click', () => {
-                            icon.classList.toggle('active');
-                            icon.classList.toggle('fa-solid');
-                            icon.classList.toggle('fa-regular');
-                        });
-                    });
-                } catch (err) {
-                    console.error("Search request failed:", err);
+                if (jobId && !button.prop('disabled')) {
+                    checkFavoriteStatus(button, jobId);
                 }
-        })
-    });
-</script>
+            });
+
+            // Add click event handler
+            $('.favorite-btn').on('click.favorite', function(event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                var button = $(this);
+                var jobId = button.data('job-id');
+
+                if (!jobId || button.prop('disabled')) return;
+
+                toggleFavorite(button, jobId);
+            });
+        }
+
+        function checkFavoriteStatus(button, jobId) {
+            $.get('@Url.Action("IsFavorite", "JobFavorite")', { jobId: jobId })
+                .done(function(response) {
+                    if (response.isFavorite) {
+                        button.addClass('favorited');
+                        button.find('i').removeClass('fa-regular').addClass('fa-solid');
+                        button.attr('title', 'Remove from favorites');
+                    } else {
+                        button.removeClass('favorited');
+                        button.find('i').removeClass('fa-solid').addClass('fa-regular');
+                        button.attr('title', 'Add to favorites');
+                    }
+                })
+                .fail(function() {
+                    console.log('Failed to check favorite status for job ' + jobId);
+                });
+        }
+
+        function toggleFavorite(button, jobId) {
+            var isCurrentlyFavorite = button.hasClass('favorited');
+            var heartIcon = button.find('i');
+
+            // Show loading state
+            button.prop('disabled', true);
+            heartIcon.removeClass('fa-regular fa-solid').addClass('fa-spinner fa-spin');
+
+            if (isCurrentlyFavorite) {
+                // Remove from favorites
+                removeFromFavorites(button, jobId, heartIcon);
+            } else {
+                // Add to favorites
+                addToFavorites(button, jobId, heartIcon);
+            }
+        }
+
+        function addToFavorites(button, jobId, heartIcon) {
+            $.post('@Url.Action("AddToFavorites", "JobFavorite")', { jobId: jobId })
+                .done(function(response) {
+                    if (response.success) {
+                        button.addClass('favorited');
+                        heartIcon.removeClass('fa-spinner fa-spin').addClass('fa-solid');
+                        button.attr('title', 'Remove from favorites');
+                        toastr.success(response.message);
+                    } else {
+                        toastr.error(response.message);
+                        updateButtonState(button, false);
+                    }
+                })
+                .fail(function() {
+                    toastr.error('An error occurred while adding to favorites');
+                    updateButtonState(button, false);
+                })
+                .always(function() {
+                    button.prop('disabled', false);
+                });
+        }
+
+        function removeFromFavorites(button, jobId, heartIcon) {
+            $.post('@Url.Action("RemoveFromFavorites", "JobFavorite")', { jobId: jobId })
+                .done(function(response) {
+                    if (response.success) {
+                        button.removeClass('favorited');
+                        heartIcon.removeClass('fa-spinner fa-spin').addClass('fa-regular');
+                        button.attr('title', 'Add to favorites');
+                        toastr.success(response.message);
+                    } else {
+                        toastr.error(response.message);
+                        updateButtonState(button, true);
+                    }
+                })
+                .fail(function() {
+                    toastr.error('An error occurred while removing from favorites');
+                    updateButtonState(button, true);
+                })
+                .always(function() {
+                    button.prop('disabled', false);
+                });
+        }
+
+        function updateButtonState(button, isFavorite) {
+            if (isFavorite) {
+                button.addClass('favorited');
+                button.find('i').removeClass('fa-spinner fa-spin fa-regular').addClass('fa-solid');
+                button.attr('title', 'Remove from favorites');
+            } else {
+                button.removeClass('favorited');
+                button.find('i').removeClass('fa-spinner fa-spin fa-solid').addClass('fa-regular');
+                button.attr('title', 'Add to favorites');
+            }
+        }
+    </script>
+}
