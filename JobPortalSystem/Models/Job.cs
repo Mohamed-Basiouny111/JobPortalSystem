@@ -19,6 +19,9 @@ namespace JobPortalSystem.Models
         [Required]
         public string Experience { get; set; }
         public decimal Salary { get; set; }
+        [NotMapped] 
+        public bool IsFavorite { get; set; }
+
 
         //Added by SQL Autmoatic when creating a new job
         public DateTime PostedDate { get; set; }

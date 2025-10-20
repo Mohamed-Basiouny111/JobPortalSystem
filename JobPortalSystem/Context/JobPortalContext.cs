@@ -15,12 +15,13 @@ namespace JobPortalSystem.Context
         {
 
         }
+        public DbSet<JobFavorite> FavoriteJobs { get; set; }
+
 
         public DbSet<Job> Jobs { get; set; }
         public DbSet<JobCategory> JobCategories { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
-        public DbSet<JobFavorite> FavoriteJobs { get; set; }
-
+        
         override protected void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(Job).Assembly);

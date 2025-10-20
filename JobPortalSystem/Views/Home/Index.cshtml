@@ -50,7 +50,8 @@
         
         if (!searchBox || !jobsContainer) return;
 
-       
+                                <i class="fa @(job.IsFavorite ? "fa-heart text-danger" : "fa-heart-o")"></i>
+                            </div>
 
         searchBox.addEventListener("input", () => {
             clearTimeout(typingTimer);
