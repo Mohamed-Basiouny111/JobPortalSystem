@@ -10,5 +10,10 @@ namespace JobPortalSystem.Repository
 
         Task<IEnumerable<Job>> GetJobsByUserAsync(string userId);
 
+        Task<IEnumerable<Job>> GetJobsByNameOrLocAsync(string searchWord);
+
+        Task<IEnumerable<Job>> SearchJobsByCategoryAsync(int categoryId);
+
+
     }
 }
