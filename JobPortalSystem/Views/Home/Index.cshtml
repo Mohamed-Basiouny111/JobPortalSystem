@@ -61,12 +61,55 @@
     </div>
 </section>
 
+<<<<<<< HEAD
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const searchBox = document.getElementById("searchBox");
+        const categorySelect = document.getElementById("CategorySelect");
+        console.log(categorySelect);
+        const jobsContainer = document.querySelector("div.container.jobsContainer");
+        let typingTimer;
+
+        
+        if (!searchBox || !jobsContainer) return;
+
+       
+
+        searchBox.addEventListener("input", () => {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(async () => {
+                const query = searchBox.value.trim();
+                console.log("Searching for:", query);
+
+                try {
+                    // m4 3aaaaaaaaaayez ba3basa hna y 4abaaaaaaaaaaab
+                    const response = await fetch(`/Home/SearchForJob?searchWord=${encodeURIComponent(query)}`);
+                    if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+                    const html = await response.text();
+                    jobsContainer.innerHTML = html;
+                     //******************************************************************************* */
+
+                    //  favorite icon
+                    document.querySelectorAll('.favorite').forEach(icon => {
+                        icon.addEventListener('click', () => {
+                            icon.classList.toggle('active');
+                            icon.classList.toggle('fa-solid');
+                            icon.classList.toggle('fa-regular');
+                        });
+                    });
+                } catch (err) {
+                    console.error("Search request failed:", err);
+                }
+            }, 300);
+=======
 @section Scripts {
     <script>
         // Initialize favorite buttons when page loads
         $(document).ready(function() {
             console.log('Initializing favorite buttons...');
             initializeFavoriteButtons();
+>>>>>>> Hossam
         });
 
         function initializeFavoriteButtons() {

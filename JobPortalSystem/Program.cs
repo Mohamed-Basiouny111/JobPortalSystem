@@ -40,8 +40,13 @@ namespace JobPortalSystem
             builder.Services.AddScoped<IGenericRepository<JobApplication>, JobApplicationRepository>();
             builder.Services.AddScoped<IGenericRepository<JobCategory>, JobCategoryRepository>();
             //builder.Services.AddScoped<IGenericRepository<JobFavorite>, JobFavoriteRepository>();
+<<<<<<< HEAD
+            builder.Services.AddScoped<JobFavoriteRepository>();
+
+=======
             // Add this with your other service registrations
             builder.Services.AddScoped<IJobFavoriteRepository, JobFavoriteRepository>();
+>>>>>>> Hossam
 
             var app = builder.Build();
 
