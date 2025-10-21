@@ -22,12 +22,13 @@
                 <div id="icons" class="d-flex align-items-center justify-content-between mt-3">
                     @if (User.IsInRole("admin") || User.IsInRole("employer"))
                     {
-                        <a class="btn btn-warning text-white disabled">Apply Job</a>
+                        <button class="btn btn-warning text-white disabled">Apply Job</button>
                     }
                     else
                     {
-                        <a class="btn btn-warning text-white">Apply Job</a>
+                        <button class="btn btn-warning text-white apply-btn" data-jobid="@job.Id">Apply Job</button>
                     }
+
                     <i class="fa-regular fa-heart fa-xl favorite"></i>
                 </div>
             </div>

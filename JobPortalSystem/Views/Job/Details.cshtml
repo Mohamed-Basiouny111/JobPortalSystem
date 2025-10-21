@@ -35,7 +35,7 @@
         }
 
         <hr />
-        @if (User.IsInRole("JobSeeker"))
+        @if (User.IsInRole("JobSeeker") || User.IsInRole("job Seeker") || User.IsInRole("JOB SEEKER"))
         {
             <a asp-controller="JobApplication"
                asp-action="Apply"

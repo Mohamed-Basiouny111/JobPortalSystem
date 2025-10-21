@@ -40,7 +40,7 @@
                     <th>Delete</th>
 
                     @* 🔹 العمود الجديد للتقديم على الوظيفة *@
-                    @if (User.IsInRole("JobSeeker"))
+                    @if (User.IsInRole("job Seeker") || User.IsInRole("JOB SEEKER"))
                     {
                         <th>Apply</th>
                     }
@@ -100,14 +100,14 @@
                         </td>
 
                         @* 🔹 زر Apply يظهر فقط للـ JobSeeker *@
-                        @if (User.IsInRole("JobSeeker"))
+                        @if (User.IsInRole("job Seeker") || User.IsInRole("JOB SEEKER"))
                         {
                             <td>
-                                <a asp-controller="JobApplication"
+                                <a class="btn btn-primary applyBtn"
+                                   asp-controller="JobApplication"
                                    asp-action="Apply"
-                                   asp-route-jobId="@job.Id"
-                                   class="btn btn-success btn-sm">
-                                    Apply
+                                   asp-route-jobId="@job.Id">
+                                    Apply Job
                                 </a>
                             </td>
                         }

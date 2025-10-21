@@ -1,6 +1,7 @@
 ﻿using JobPortalSystem.Models;
 using JobPortalSystem.Repository;
 using JobPortalSystem.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -19,19 +20,25 @@ namespace JobPortalSystem.Controllers
             this.jobCatgRepo=jobCatgRepo;
         }
 
+        [Authorize] // مهم علشان محدش يدخل بدون تسجيل دخول
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            //string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            string userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             IEnumerable<Job> jobs;
 
-            if (userRole?.ToLower() == "admin" || userRole?.ToLower() == "jobseeker")
+            // ✅ لو المستخدم Admin → يشوف كل الوظائف
+            if (User.IsInRole("Admin"))
             {
                 jobs = await JobRepo.GetJobsWithCategoriesAsync();
             }
+            // ✅ لو المستخدم Job Seeker → يشوف كل الوظائف (يقدر يقدم عليها)
+            else if (User.IsInRole("Job Seeker"))
+            {
+                jobs = await JobRepo.GetJobsWithCategoriesAsync();
+            }
+            // ✅ لو Employer → يشوف الوظائف اللي هو ضافها بس
             else
             {
                 jobs = await JobRepo.GetJobsByUserAsync(userId);
@@ -39,6 +46,7 @@ namespace JobPortalSystem.Controllers
 
             return View("ShowAllJobs", jobs);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> AddJob()

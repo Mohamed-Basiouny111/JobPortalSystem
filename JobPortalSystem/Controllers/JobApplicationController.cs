@@ -24,7 +24,7 @@ namespace JobPortalSystem.Controllers
         }
 
         // ✅ عرض الطلبات الخاصة بالمستخدم (Job Seeker)
-        [Authorize(Roles = "JobSeeker")]
+        [Authorize(Roles = "job Seeker")]
         public async Task<IActionResult> MyApplications()
         {
             var user = await _userManager.GetUserAsync(User);
@@ -37,54 +37,66 @@ namespace JobPortalSystem.Controllers
             return View(myApps);
         }
 
-        // ✅ عرض صفحة التقديم على وظيفة
-        [Authorize(Roles = "JobSeeker")]
+        // ✅ [GET] عرض صفحة التقديم
+        [Authorize(Roles = "job Seeker")]
+        [HttpGet]
         public async Task<IActionResult> Apply(int jobId)
         {
             var job = await _jobRepo.GetByIdAsync(jobId);
             if (job == null)
-                return NotFound();
+                return NotFound("Job not found");
 
             ViewBag.Job = job;
             return View(new JobApplication { JobId = jobId });
         }
 
+        // ✅ [POST] تنفيذ التقديم
         [HttpPost]
-        [Authorize(Roles = "JobSeeker")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "job Seeker")]
         public async Task<IActionResult> Apply(JobApplication model)
         {
+            if (!ModelState.IsValid)
+            {
+                var job = await _jobRepo.GetByIdAsync(model.JobId ?? 0);
+                ViewBag.Job = job;
+                return View(model);
+            }
+
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
-            // ✅ التأكد أن الوظيفة موجودة
-            var job = await _jobRepo.GetByIdAsync(model.JobId ?? 0);
-            if (job == null) return NotFound("Job not found");
+            // ✅ التأكد من وجود الوظيفة
+            var jobData = await _jobRepo.GetByIdAsync(model.JobId ?? 0);
+            if (jobData == null) return NotFound("Job not found");
 
             // ✅ منع التقديم المكرر
-            var exists = (await _jobAppRepo.GetAllAsync())
-                         .Any(a => a.JobId == job.Id && a.UserId == user.Id);
-            if (exists)
+            var alreadyApplied = (await _jobAppRepo.GetAllAsync())
+                                 .Any(a => a.JobId == model.JobId && a.UserId == user.Id);
+
+            if (alreadyApplied)
             {
-                TempData["Error"] = "You already applied to this job.";
-                return RedirectToAction("GetAll", "Job");
+                TempData["Error"] = "⚠ You already applied for this job.";
+                return RedirectToAction("MyApplications");
             }
 
-            // ✅ إنشاء الطلب
+            // ✅ إنشاء طلب التوظيف
             var newApp = new JobApplication
             {
-                JobId = job.Id,
+                JobId = model.JobId,
                 UserId = user.Id,
                 CoverLetter = model.CoverLetter,
-                Status = "Pending",
-                AppliedDate = DateTime.Now
+                AppliedDate = DateTime.Now,
+                Status = "Pending"
             };
 
             await _jobAppRepo.AddAsync(newApp);
             await _jobAppRepo.SaveAsync();
 
-            TempData["Success"] = "Application submitted!";
+            TempData["Success"] = "✅ Application submitted successfully!";
             return RedirectToAction("MyApplications");
         }
+
 
 
         // ✅ عرض المتقدمين لوظيفة (Employer)
