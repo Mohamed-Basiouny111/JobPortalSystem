@@ -1,6 +1,6 @@
 ﻿@model JobsAndCategoriesVM
 
-    
+
 <div class="row g-4 align-items-stretch">
     @foreach (var job in Model.jobs)
     {
@@ -26,9 +26,13 @@
                     }
                     else
                     {
-                        <button class="btn btn-warning text-white apply-btn" data-jobid="@job.Id">Apply Job</button>
+                        <a asp-controller="JobApplication"
+                           asp-action="Apply"
+                           asp-route-jobId="@job.Id"
+                           class="btn btn-warning text-white">
+                            Apply Job
+                        </a>
                     }
-
                     <i class="fa-regular fa-heart fa-xl favorite"></i>
                 </div>
             </div>
@@ -37,4 +41,3 @@
 </div>
 
 
-  @* matnsaaaaaaah js bta3aet el favourite icon y hooosaaam *@

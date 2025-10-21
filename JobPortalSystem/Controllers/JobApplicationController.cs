@@ -66,11 +66,9 @@ namespace JobPortalSystem.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
 
-            // ✅ التأكد من وجود الوظيفة
             var jobData = await _jobRepo.GetByIdAsync(model.JobId ?? 0);
             if (jobData == null) return NotFound("Job not found");
 
-            // ✅ منع التقديم المكرر
             var alreadyApplied = (await _jobAppRepo.GetAllAsync())
                                  .Any(a => a.JobId == model.JobId && a.UserId == user.Id);
 
@@ -80,7 +78,6 @@ namespace JobPortalSystem.Controllers
                 return RedirectToAction("MyApplications");
             }
 
-            // ✅ إنشاء طلب التوظيف
             var newApp = new JobApplication
             {
                 JobId = model.JobId,
@@ -96,6 +93,7 @@ namespace JobPortalSystem.Controllers
             TempData["Success"] = "✅ Application submitted successfully!";
             return RedirectToAction("MyApplications");
         }
+
 
 
 
