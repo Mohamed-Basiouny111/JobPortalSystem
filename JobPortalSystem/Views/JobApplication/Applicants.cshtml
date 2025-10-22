@@ -55,6 +55,7 @@
                             <th>Applicant Name</th>
                             <th>Email</th>
                             <th>Applied Date</th>
+                            <th>Job Title</th> 
                             <th>Status</th>
                             <th>Cover Letter</th>
                             <th>CV</th>
@@ -72,10 +73,11 @@
                                 <td><strong>@app.User?.UserName</strong></td>
                                 <td>@app.User?.Email</td>
                                 <td>@app.AppliedDate.ToString("yyyy-MM-dd")</td>
+                                <td>@app.Job?.Title</td> <!-- ✅ هنا نعرض اسم الوظيفة -->
                                 <td>
                                     <span class="badge
-                                                @(app.Status == "Pending" ? "bg-warning text-dark" :
-                                                                                    app.Status == "Accepted" ? "bg-success" : "bg-danger")">
+                            @(app.Status == "Pending" ? "bg-warning text-dark" :
+                                                                app.Status == "Accepted" ? "bg-success" : "bg-danger")">
                                 @app.Status
                             </span>
                         </td>
