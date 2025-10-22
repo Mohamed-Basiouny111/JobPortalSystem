@@ -66,6 +66,11 @@ namespace JobPortalSystem.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
+            if (string.IsNullOrEmpty(user.CV))
+            {
+                TempData["Error"] = "⚠ You must upload your CV before applying for a job.";
+                return RedirectToAction("EditUserInfo", "Account");
+            }
 
             var job = await _jobRepo.GetByIdAsync(model.JobId ?? 0);
             if (job == null)
