@@ -103,6 +103,38 @@
                         </a>
                     </li>
                 }
+                @if (User.IsInRole("job Seeker"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="JobApplication" asp-action="MyApplications">
+                            <i class="fa-solid fa-users"></i> Application
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole("employer"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="JobApplication" asp-action="Applicants">
+                            <i class="fa-solid fa-users"></i> Applicantion
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="EmployerDashboard" asp-action="index">
+                            <i class="fa-solid fa-chart-line"></i> Dashboard
+                        </a>
+                    </li>
+                }
+
+                <!-- 🔹 لو المستخدم Admin -->
+                @if (User.IsInRole("admin") || User.IsInRole("Admin"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="AdminDashboard" asp-action="index">
+                            <i class="fa-solid fa-user-shield"></i> Dashboard
+                        </a>
+                    </li>
+                }
+                
 
                 <li><a href="#work" class="link">work</a></li>
                 <partial name="_IdentityPartial" />

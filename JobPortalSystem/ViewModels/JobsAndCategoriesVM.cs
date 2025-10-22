@@ -4,8 +4,9 @@ namespace JobPortalSystem.ViewModels
 {
     public class JobsAndCategoriesVM
     {
-        public IEnumerable <Job> jobs = new List<Job>();
-
-        public IEnumerable <JobCategory> Categories = new List<JobCategory>();
+        public IEnumerable<Job> Jobs { get; set; } = new List<Job>();
+        public IEnumerable<Job> jobs { get; internal set; }
+        public IEnumerable<JobCategory> Categories { get; set; } = new List<JobCategory>();
+        public List<int> appliedJobIds { get; set; } = new List<int>();
     }
 }

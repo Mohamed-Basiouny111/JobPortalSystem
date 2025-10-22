@@ -115,6 +115,16 @@
                             </a>
                         </li>
                     }
+                    @if (User.IsInRole("job Seeker"))
+                    {
+                        <li>
+                            <a asp-controller="JobApplication" asp-action="MyApplications">
+                                <i class="fa-solid fa-file-contract me-2"></i>
+                                My Applications
+                            </a>
+                        </li>
+                    }
+
                 </ul>
             </div>
         </div>

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobPortalSystem.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "admin")]
     public class AdminDashboardController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

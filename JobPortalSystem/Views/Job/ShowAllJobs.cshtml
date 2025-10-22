@@ -1,4 +1,4 @@
-﻿@model List<Job>
+﻿@model JobPortalSystem.ViewModels.JobsAndCategoriesVM
 
 @{
     ViewData["Title"] = "Show All Jobs";
@@ -10,12 +10,6 @@
 
 <div class="my-3">
     <div class="d-flex justify-content-end mb-3">
-        @if (User.IsInRole("Employer") || User.IsInRole("Admin"))
-        {
-            <a asp-action="AddJob" asp-controller="Job" class="btn btn-success">
-                + Add New Job
-            </a>
-        }
     </div>
 
     <div class="shadow-sm rounded">
@@ -47,7 +41,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var job in Model)
+                @foreach (var job in Model.Jobs)
                 {
                     <tr>
                         <td>@counter</td>
@@ -103,12 +97,21 @@
                         @if (User.IsInRole("job Seeker") || User.IsInRole("JOB SEEKER"))
                         {
                             <td>
-                                <a class="btn btn-primary applyBtn"
-                                   asp-controller="JobApplication"
-                                   asp-action="Apply"
-                                   asp-route-jobId="@job.Id">
-                                    Apply Job
-                                </a>
+                                @if (Model.appliedJobIds != null && Model.appliedJobIds.Contains(job.Id))
+                                {
+                                    <button class="btn btn-success text-white disabled">
+                                        <i class="fa-solid fa-check"></i> Already Applied
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-primary applyBtn"
+                                       asp-controller="JobApplication"
+                                       asp-action="Apply"
+                                       asp-route-jobId="@job.Id">
+                                        Apply Job
+                                    </a>
+                                }
                             </td>
                         }
                     </tr>

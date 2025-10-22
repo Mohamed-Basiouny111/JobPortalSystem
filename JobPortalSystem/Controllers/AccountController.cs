@@ -107,7 +107,7 @@ namespace JobPortalSystem.Controllers
                 if (result.Succeeded)
                 {
                     //assign Role
-                    await userManager.AddToRoleAsync(user, "Employer");
+                    await userManager.AddToRoleAsync(user, "employer");
                     //Cookies
                    // await signInManager.SignInAsync(user, false);
                     return RedirectToAction("Login");
@@ -209,7 +209,7 @@ namespace JobPortalSystem.Controllers
         {
             if (User.Identity.IsAuthenticated == true)
             {
-                while (User.IsInRole("Admin"))
+                while (User.IsInRole("admin"))
                 {
                     // Admin specific logic
                 }

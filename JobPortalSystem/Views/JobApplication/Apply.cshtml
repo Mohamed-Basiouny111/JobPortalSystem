@@ -9,6 +9,25 @@
         <h3 class="text-primary mb-4">
             <i class="fa-solid fa-briefcase me-2"></i> Apply for: <strong>@job?.Title</strong>
         </h3>
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
 
         <div class="mb-3">
             <p>
@@ -19,8 +38,9 @@
             </p>
         </div>
 
-        <form asp-action="Apply" method="post">
-            <input type="hidden" asp-for="JobId" />
+        <!-- تم التعديل هنا: إضافة asp-route-jobId -->
+        <form asp-action="Apply" asp-controller="JobApplication" method="post">
+            <input type="hidden" asp-for="JobId" value="@job?.Id" />
 
             <div class="mb-3">
                 <label asp-for="CoverLetter" class="form-label fw-bold">Cover Letter</label>
@@ -43,4 +63,20 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <!-- إضافة script للتحقق من النموذج -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const coverLetter = document.querySelector('#CoverLetter').value;
+                if (!coverLetter || coverLetter.trim().length === 0) {
+                    e.preventDefault();
+                    alert('Please write a cover letter before submitting.');
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
 }

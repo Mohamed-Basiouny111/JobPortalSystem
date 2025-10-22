@@ -27,7 +27,7 @@ namespace JobPortalSystem.Controllers
             //var jobs = await jobRepo.GetJobsWithCategoriesAsync();
             JobsAndCategoriesVM jobsAndCategoriesVM = new JobsAndCategoriesVM()
             {
-                jobs = await jobRepo.GetJobsWithCategoriesAsync(),
+                Jobs = await jobRepo.GetJobsWithCategoriesAsync(),
                 Categories = await categoryRepo.GetAllAsync()
             };
             return View(jobsAndCategoriesVM);

@@ -1,9 +1,29 @@
 ﻿@model IEnumerable<JobPortalSystem.Models.JobApplication>
 @{
     ViewData["Title"] = "My Applications";
+    Layout = "_ProfileLayout";
+    int counter = 1;
 }
 
+
 <div class="container my-5">
+
+    <!-- ✅ عرض الرسائل المؤقتة (من TempData) -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
     @if (!Model.Any())
     {
         <!-- ✅ رسالة في منتصف الصفحة بالكامل -->
@@ -46,7 +66,7 @@
                                 <td>
                                     <span class="badge
                                                 @(app.Status == "Pending" ? "bg-warning text-dark" :
-                                                                                  app.Status == "Accepted" ? "bg-success" : "bg-danger")">
+                                                                                    app.Status == "Accepted" ? "bg-success" : "bg-danger")">
                                 @app.Status
                             </span>
                         </td>

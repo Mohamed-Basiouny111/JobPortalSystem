@@ -357,60 +357,65 @@ function manageBoxes() {
 }
 
 // <!---------- Alert Contact Section ---------->
-let nameInput = document.querySelector("input[name='name']");
-let emailInput = document.querySelector("input[name='email']");
-let textArea = document.querySelector("textarea");
-let btnSubmit = document.querySelector(".btn-submit");
-let alert = document.querySelector(".alert");
-let alertTimer = document.querySelector(".alert span");
-let alertExit = document.querySelectorAll(".alert .exit");
-let sendBtn = document.querySelector("#send");
+if (document.querySelector(".btn-submit")) {
 
-function show(alert, alertTimer) {
-    alertTimer.style.transition = "width 5s linear";
-    alertTimer.style.width = 0;
-    alert.style.transform = "translateX(0)";
-}
-function close(alert, alertTimer) {
-    alertTimer.style.transition = "width 0s linear";
-    alertTimer.style.width = "100%";
-    alert.style.transform = "translateX(calc(350px + 1rem))";
-}
+    let nameInput = document.querySelector("input[name='name']");
+    let emailInput = document.querySelector("input[name='email']");
+    let textArea = document.querySelector("textarea");
+    let btnSubmit = document.querySelector(".btn-submit");
+    let alert = document.querySelector(".alert");
+    let alertTimer = document.querySelector(".alert span");
+    let alertExit = document.querySelectorAll(".alert .exit");
 
-btnSubmit.addEventListener("click", (e) => {
-    if (
-        nameInput.value.length !== 0 &&
-        emailInput.value.includes("@") &&
-        emailInput.value.slice(emailInput.value.indexOf("@"), -1).length >= 1 &&
-        textArea.value.length !== 0
-    ) {
-        setTimeout(() => {
-            close(alert, alertTimer);
-        }, 5000);
-        show(alert, alertTimer);
-    } else {
-        e.preventDefault();
-        setTimeout(() => {
+    function show(alert, alertTimer) {
+        alertTimer.style.transition = "width 5s linear";
+        alertTimer.style.width = 0;
+        alert.style.transform = "translateX(0)";
+    }
+
+    function close(alert, alertTimer) {
+        alertTimer.style.transition = "width 0s linear";
+        alertTimer.style.width = "100%";
+        alert.style.transform = "translateX(calc(350px + 1rem))";
+    }
+
+    btnSubmit.addEventListener("click", (e) => {
+        if (
+            nameInput.value.length !== 0 &&
+            emailInput.value.includes("@") &&
+            emailInput.value.slice(emailInput.value.indexOf("@"), -1).length >= 1 &&
+            textArea.value.length !== 0
+        ) {
+            setTimeout(() => close(alert, alertTimer), 5000);
+            show(alert, alertTimer);
+        } else {
+            e.preventDefault();
+            setTimeout(() => {
+                close(
+                    document.querySelector(".alert.error"),
+                    document.querySelector(".alert.error span")
+                );
+            }, 5000);
+            show(
+                document.querySelector(".alert.error"),
+                document.querySelector(".alert.error span")
+            );
+        }
+    });
+
+    if (alertExit.length >= 2) {
+        alertExit[0]?.addEventListener("click", () => {
+            close(
+                document.querySelector(".alert.success"),
+                document.querySelector(".alert.success span")
+            );
+        });
+
+        alertExit[1]?.addEventListener("click", () => {
             close(
                 document.querySelector(".alert.error"),
                 document.querySelector(".alert.error span")
             );
-        }, 5000);
-        show(
-            document.querySelector(".alert.error"),
-            document.querySelector(".alert.error span")
-        );
+        });
     }
-});
-alertExit[0].addEventListener("click", () => {
-    close(
-        document.querySelector(".alert.success"),
-        document.querySelector(".alert.success span")
-    );
-});
-alertExit[1].addEventListener("click", () => {
-    close(
-        document.querySelector(".alert.error"),
-        document.querySelector(".alert.error span")
-    );
-});
+}
