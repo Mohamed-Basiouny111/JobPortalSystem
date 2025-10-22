@@ -1,0 +1,73 @@
+﻿@model JobPortalSystem.ViewModels.ComUserInfo
+
+@{
+    Layout = "_ProfileLayout";
+    ViewData["Title"] = "Edit User Info";
+}
+
+<h2>Edit Your Information</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="SaveEditUser" asp-controller="Account" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input type="hidden" asp-for="Id" />
+
+
+            <div class="form-group mb-3">
+                <label class="form-label">Choose Profile Picture</label>
+                <input type="file" name="ImageFile" accept="image/*" class="form-control" id="imageInput" />
+                <img id="preview" src="@(Model.ImgURl)" alt="Preview" style="width:120px; margin-top:10px; display:@(string.IsNullOrEmpty(Model.ImgURl) ? "none" : "block"); border-radius:8px; border:1px solid #ccc;" />
+            </div>
+
+
+            <div class="form-group mb-3">
+                <label asp-for="UserName" class="form-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+
+            @********************* Pdf Code****************************** *@
+            <div class="form-group mb-3">
+                <label class="form-label">Upload Your CV (PDF, DOC, DOCX)</label>
+                <input type="file" name="CVFile" accept=".pdf,.doc,.docx" class="form-control" required />
+                <span class="text-muted">Max size: 5 MB</span>
+            </div>
+
+
+            <div class="form-group mb-3">
+                <label asp-for="Password" class="form-label"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ConfirmPassword" class="form-label"></label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+
+        </form>
+    </div>
+</div>
+<br />
+<div>
+    <a class="btn btn-secondary ms-2" asp-controller="account" asp-action="profile">Back to My Profile</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

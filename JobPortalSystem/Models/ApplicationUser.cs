@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JobPortalSystem.Models
 {
@@ -6,6 +7,9 @@ namespace JobPortalSystem.Models
     {
         // URL or path to the Photo
         public string? PhotoURL { get; set; }
+
+        [NotMapped]
+        public IFormFile? CVFile { get; set; }
         // URL or path to the CV file
         public string? CV { get; set; } 
         public string? CompanyName { get; set; }
