@@ -40,7 +40,7 @@
 </head>
 <body>
     <!-- Start Header -->
-    
+
     <header>
         <div class="container">
             <div class="burger-list">
@@ -57,6 +57,10 @@
                 <li><a href="#about" class="link">about</a></li>
                 <li><a href="#service" class="link">service</a></li>
                 <li><a href="#work" class="link">work</a></li>
+
+                <!-- FIXED: Use lowercase "admin" to match your project -->
+              
+
                 <partial name="_IdentityPartial" />
             </ul>
             <div class="dark-mode">
@@ -65,70 +69,109 @@
             </div>
         </div>
     </header>
-   
+
     <!-- End Header -->
     <!-- Start Home Section -->
-    <section class="home  " id="home" >
+    <section class="home" id="home">
+        <div>
+            <div class="sidebar">
+                <ul class="mt-5">
+                    <li class="active">
+                        <a asp-controller="Account" asp-action="Profile">
+                            <i class="fa-regular fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                    </li>
 
-        
-            
-                <div >
-                    <div class="sidebar">
-                        
-                        <ul class="mt-5">
-                            <li data-filter=".page1" class="active">
-                                <i class="fa-regular fa-chart-bar"></i>
-                                <span>Profile</span>
-                            </li>
                     @if (User.IsInRole("admin"))
                     {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Admin" asp-action="JobSeekers">
-                                Manage JobSeekers
+                        <li>
+                            <a asp-controller="Admin" asp-action="users">
+                                <i class="fa-solid fa-users"></i>
+                                <span>Manage Users</span>
                             </a>
                         </li>
                     }
 
-                            @if (User.IsInRole("admin") || User.IsInRole("employer"))
-                            {
-                                <li data-filter=".page3">
-                                    <a asp-controller="Job" asp-action="GetAll">
-                                        <i class="fa-regular fa-user"></i>
-                                        <span>Jobs</span>
-                                    </a>
-                                </li>
-                                <li data-filter=".page3">
-                                    <a asp-controller="JobCategory" asp-action="GetAll">
-                                        <i class="fa-regular fa-user"></i>
-                                        <span>JobCategory</span>
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    </div>
+                    @if (User.IsInRole("admin") || User.IsInRole("employer"))
+                    {
+                        <li>
+                            <a asp-controller="Job" asp-action="GetAll">
+                                <i class="fa-solid fa-briefcase"></i>
+                                <span>Jobs</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a asp-controller="JobCategory" asp-action="GetAll">
+                                <i class="fa-solid fa-tags"></i>
+                                <span>JobCategory</span>
+                            </a>
+                        </li>
+                    }
+                    @if (User.IsInRole("job Seeker"))
+                    {
+                        <li>
+                            <a asp-controller="JobApplication" asp-action="MyApplications">
+                                <i class="fa-solid fa-file-contract me-2"></i>
+                                My Applications
+                            </a>
+                        </li>
+                    }
                     
-                </div>
-               
-                <div class=" profile-content ">
-                    @RenderBody()
-                </div>
-            <
-        
+                    @if (User.IsInRole("employer"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="JobApplication" asp-action="Applicants">
+                                <i class="fa-solid fa-users"></i> Applicantion
+                            </a>
+                        </li>
+                        @* <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="EmployerDashboard" asp-action="index">
+                                <i class="fa-solid fa-chart-line"></i> Dashboard
+                            </a>
+                        </li> *@
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="CompanyDashboard" asp-action="index">
+                                <i class="fa-solid fa-chart-line"></i> DashboardCom
+                            </a>
+                        </li>
+                    }
+                    <!-- 🔹 لو المستخدم Admin -->
+                    @if (User.IsInRole("admin") || User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="AdminDashboard" asp-action="index">
+                                <i class="fa-solid fa-user-shield"></i> Dashboard
+                            </a>
+                        </li>
+                    }
+                    @if (User.IsInRole("admin") || User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="account" asp-action="prof">
+                                <i class="fa-solid fa-user-shield"></i> Company
+                            </a>
+                        </li>
+                    }
+
+
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            @RenderBody()
+        </div>
     </section>
     <!-- End Home Section -->
- 
-   
-    
 
     <partial name="_NotifyPartil" />
 
- 
     <!-- Main JS -->
     <script src="~/Js/main.js"></script>
     <!-- Admin Js File -->
     <script src="~/Js/admin.js"></script>
-    <script src="~/Js/site.js"></script>
-
     <!-- Swiper JS -->
     <script src="~/Js/swiper.min.js"></script>
     <!-- Main JS -->

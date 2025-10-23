@@ -17,47 +17,77 @@ namespace JobPortalSystem.Controllers
             _roleManager = roleManager;
         }
 
-        // ✅ List all JobSeekers
-        public async Task<IActionResult> JobSeekers()
+        // ✅ Show all users
+        public IActionResult Users()
         {
-            var users = await _userManager.GetUsersInRoleAsync("JobSeeker");
+            var users = _userManager.Users.ToList();
             return View(users);
         }
 
-        // ✅ Edit User (GET)
-        public async Task<IActionResult> Edit(string id)
+        // ✅ Edit roles for specific user
+        public async Task<IActionResult> EditRoles(string id)
         {
-            if (string.IsNullOrEmpty(id))
+            if (id == null)
                 return NotFound();
 
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
                 return NotFound();
 
-            return View(user);
-        }
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var allRoles = _roleManager.Roles.ToList();
 
-        // ✅ Edit User (POST)
-        [HttpPost]
-        public async Task<IActionResult> Edit(ApplicationUser model)
-        {
-            var user = await _userManager.FindByIdAsync(model.Id);
-            if (user == null)
-                return NotFound();
-
-            user.UserName = model.UserName;
-            user.Email = model.Email;
-            user.PhoneNumber = model.PhoneNumber;
-            // add more fields as you want to edit
-
-            var result = await _userManager.UpdateAsync(user);
-            if (result.Succeeded)
-                return RedirectToAction("JobSeekers");
-
-            foreach (var error in result.Errors)
-                ModelState.AddModelError("", error.Description);
+            var model = new EditUserRolesViewModel
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                CurrentRoles = userRoles,
+                AvailableRoles = allRoles.Select(r => r.Name).ToList()
+            };
 
             return View(model);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> EditRoles(EditUserRolesViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+                return NotFound();
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            // Remove all current roles
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
+            if (!removeResult.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to remove old roles");
+                return View(model);
+            }
+
+            // Add selected roles
+            if (model.SelectedRoles != null && model.SelectedRoles.Any())
+            {
+                var addResult = await _userManager.AddToRolesAsync(user, model.SelectedRoles);
+                if (!addResult.Succeeded)
+                {
+                    ModelState.AddModelError("", "Failed to assign new roles");
+                    return View(model);
+                }
+            }
+
+            return RedirectToAction("Users");
+        }
+    }
+
+    // ✅ Helper ViewModel
+    public class EditUserRolesViewModel
+    {
+        public string UserId { get; set; }
+        public string UserName { get; set; }
+
+        public IList<string> CurrentRoles { get; set; } = new List<string>();
+        public List<string> AvailableRoles { get; set; } = new();
+        public List<string> SelectedRoles { get; set; } = new();
     }
 }

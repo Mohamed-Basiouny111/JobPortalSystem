@@ -1,6 +1,6 @@
 ﻿@model JobsAndCategoriesVM
 
-    
+
 <div class="row g-4 align-items-stretch">
     @foreach (var job in Model.jobs)
     {
@@ -22,11 +22,16 @@
                 <div id="icons" class="d-flex align-items-center justify-content-between mt-3">
                     @if (User.IsInRole("admin") || User.IsInRole("employer"))
                     {
-                        <a class="btn btn-warning text-white disabled">Apply Job</a>
+                        <button class="btn btn-warning text-white disabled">Apply Job</button>
                     }
                     else
                     {
-                        <a class="btn btn-warning text-white">Apply Job</a>
+                        <a asp-controller="JobApplication"
+                           asp-action="Apply"
+                           asp-route-jobId="@job.Id"
+                           class="btn btn-warning text-white">
+                            Apply Job
+                        </a>
                     }
                     <i class="fa-regular fa-heart fa-xl favorite"></i>
                 </div>
@@ -36,4 +41,3 @@
 </div>
 
 
-  @* matnsaaaaaaah js bta3aet el favourite icon y hooosaaam *@

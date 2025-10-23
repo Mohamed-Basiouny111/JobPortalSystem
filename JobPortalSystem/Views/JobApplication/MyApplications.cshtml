@@ -1,0 +1,91 @@
+﻿@model IEnumerable<JobPortalSystem.Models.JobApplication>
+@{
+    ViewData["Title"] = "My Applications";
+    Layout = "_ProfileLayout";
+    int counter = 1;
+}
+
+
+<div class="container my-5">
+
+    <!-- ✅ عرض الرسائل المؤقتة (من TempData) -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    else if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <!-- ✅ رسالة في منتصف الصفحة بالكامل -->
+        <div class="d-flex justify-content-center align-items-center" style="height:70vh;">
+            <div class="text-center">
+                <i class="fa-solid fa-circle-info text-primary mb-3" style="font-size: 3rem;"></i>
+                <h4 class="text-secondary">You haven’t applied to any jobs yet.</h4>
+                <p class="text-muted">Start exploring and apply for jobs that match your skills!</p>
+                <a href="https://localhost:7071/" class="btn btn-primary mt-3">
+                    <i class="fa-solid fa-briefcase me-2"></i> Browse Jobs
+                </a>
+            </div>
+        </div>
+
+    }
+    else
+    {
+        <div class="card shadow-sm p-4">
+            <h3 class="text-primary mb-4">
+                <i class="fa-solid fa-briefcase me-2"></i> My Job Applications
+            </h3>
+
+            <div class="table-responsive">
+                <table class="table table-striped align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Company</th>
+                            <th>Applied Date</th>
+                            <th>Status</th>
+                            <th>Cover Letter</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var app in Model)
+                        {
+                            <tr>
+                                <td><strong>@app.Job?.Title</strong></td>
+                                <td>@app.Job?.PostedUser?.CompanyName</td>
+                                <td>@app.AppliedDate.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    <span class="badge
+                                                @(app.Status == "Pending" ? "bg-warning text-dark" :
+                                                                                    app.Status == "Accepted" ? "bg-success" : "bg-danger")">
+                                @app.Status
+                            </span>
+                        </td>
+                        <td style="max-width: 250px; text-align: left;">
+                            @if (!string.IsNullOrWhiteSpace(app.CoverLetter))
+                                    {
+                                        @app.CoverLetter
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">No cover letter provided</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>

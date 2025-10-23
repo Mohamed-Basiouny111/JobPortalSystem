@@ -1,4 +1,134 @@
-﻿@model List<Job>
+﻿@* @model List<Job>
+
+@{
+    ViewData["Title"] = "Show All Jobs";
+    Layout = "_ProfileLayout";
+    int counter = 1;
+}
+
+<h1 class="text-center text-primary my-4">Available Jobs</h1> *@
+
+@* <div class="my-3">
+    <div class="d-flex justify-content-end mb-3">
+    </div>
+
+
+    <a asp-controller="job" asp-action="AddJob" class="btn btn-primary">Add New Job</a>
+
+    <div class="shadow-sm rounded">
+        <table id="jobsTable" class="table table-striped table-bordered align-middle w-100">
+            <thead class="table-light">
+                <tr>
+                    <th>No</th>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Location</th>
+                    <th>Salary</th>
+                    <th>Experience</th>
+                    <th>Requirements</th>
+                    <th>Expiry Date</th>
+                    <th>Category</th>
+                    @if (User.IsInRole("admin"))
+                    {
+                        <th>Posted By</th>
+                    }
+
+                    <th>Edit</th>
+                    <th>Delete</th>
+
+                 
+                    @if (User.IsInRole("job Seeker") || User.IsInRole("JOB SEEKER"))
+                    {
+                        <th>Apply</th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in Model.Jobs)
+                {
+                    <tr>
+                        <td>@counter</td>
+                        <td>@job.Id</td>
+                        <td>@job.Title</td>
+                        <td>@job.Location</td>
+                        <td>@job.Salary.ToString("C0")</td>
+                        <td>@job.Experience</td>
+                        <td>
+                            @{
+                                var reqs = System.Text.RegularExpressions.Regex
+                                .Split(job.Requirements ?? "", @",")
+                                .Where(s => !string.IsNullOrWhiteSpace(s))
+                                .Select(s => s.Trim())
+                                .ToList();
+                            }
+                            @if (reqs.Count > 0)
+                            {
+                                <ul class="list-unstyled mb-0">
+                                    @foreach (var r in reqs)
+                                    {
+                                        <li><i class="fa-solid fa-circle-check text-success me-1"></i>@r</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No requirements</span>
+                            }
+                        </td>
+                        <td>@job.ExpiryDate.ToString("yyyy-MM-dd")</td>
+                        <td>@job.Category?.Name</td>
+
+                        @if (User.IsInRole("admin"))
+                        {
+                            <td>@job.PostedUser?.CompanyName</td>
+                        }
+
+                        <td>
+                            <a class="btn btn-warning btn-sm text-white"
+                               asp-action="Update" asp-controller="Job" asp-route-id="@job.Id">
+                                EDIT
+                            </a>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Delete", "Job", new { id = job.Id })"
+                               class="btn btn-danger btn-sm delete-job">
+                                DELETE
+                            </a>
+                        </td>
+
+                       
+                        @if (User.IsInRole("job Seeker") || User.IsInRole("JOB SEEKER"))
+                        {
+                            <td>
+                                @if (Model.appliedJobIds != null && Model.appliedJobIds.Contains(job.Id))
+                                {
+                                    <button class="btn btn-success text-white disabled">
+                                        <i class="fa-solid fa-check"></i> Already Applied
+                                    </button>
+                                }
+                                else
+                                {
+                                    <a class="btn btn-primary applyBtn"
+                                       asp-controller="JobApplication"
+                                       asp-action="Apply"
+                                       asp-route-jobId="@job.Id">
+                                        Apply Job
+                                    </a>
+                                }
+                            </td>
+                        }
+                    </tr>
+                    counter++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div> *@
+
+
+ @* كود حمزه *@
+ 
+ @model List<Job>
 
 @{
     ViewData["Title"] = "Show All Jobs";
@@ -22,8 +152,8 @@
                     <th>No</th>
                     <th>ID</th>
                     <th>Title</th>
-                    @* <th>Description</th> *@
-                    <th>Location</th>
+                    <th>Description</th> 
+                     <th>Location</th>
                     <th>Salary</th>
                     <th>Experience</th>
                     <th>Requirements</th>
@@ -44,7 +174,7 @@
                         <td>@counter</td>
                         <td>@job.Id</td>
                         <td>@job.Title</td>
-                        @* <td>@job.Description</td> *@
+                         <td>@job.Description</td> 
                         <td>@job.Location</td>
                         <td>@job.Salary.ToString("C0")</td>
                         <td>@job.Experience</td>
@@ -76,8 +206,8 @@
                         {
                             <td>@job.PostedUser?.CompanyName</td>
                         }
-                        <td>
-                            <a class="btn btn-warning btn-sm text-white"
+                        <td> 
+                           <a class="btn btn-warning btn-sm text-white"
                                asp-action="Update" asp-controller="Job" asp-route-id="@job.Id">
                                 EDIT
                             </a>
@@ -88,13 +218,17 @@
                                 DELETE
                             </a>
                         </td>
+
+
                     </tr>
+
+
                     counter++;
                 }
             </tbody>
         </table>
     </div>
-</div>
+</div>  
 
 
 @section Scripts {

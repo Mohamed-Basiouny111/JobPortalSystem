@@ -1,0 +1,82 @@
+﻿@model JobPortalSystem.Models.JobApplication
+@{
+    ViewData["Title"] = "Apply for Job";
+    var job = ViewBag.Job as JobPortalSystem.Models.Job;
+}
+
+<div class="container my-5">
+    <div class="card shadow-sm p-4">
+        <h3 class="text-primary mb-4">
+            <i class="fa-solid fa-briefcase me-2"></i> Apply for: <strong>@job?.Title</strong>
+        </h3>
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert alert-danger">@TempData["Error"]</div>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">@TempData["Success"]</div>
+        }
+
+
+        <div class="mb-3">
+            <p>
+                <strong>Location:</strong> @job?.Location <br />
+                <strong>Salary:</strong> @job?.Salary.ToString("C0") <br />
+                <strong>Experience Required:</strong> @job?.Experience <br />
+                <strong>Expiry Date:</strong> @job?.ExpiryDate.ToString("yyyy-MM-dd")
+            </p>
+        </div>
+
+        <!-- تم التعديل هنا: إضافة asp-route-jobId -->
+        <form asp-action="Apply" asp-controller="JobApplication" method="post">
+            <input type="hidden" asp-for="JobId" value="@job?.Id" />
+
+            <div class="mb-3">
+                <label asp-for="CoverLetter" class="form-label fw-bold">Cover Letter</label>
+                <textarea asp-for="CoverLetter" class="form-control" rows="6" placeholder="Write a short message to the employer..."></textarea>
+                <span asp-validation-for="CoverLetter" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-end mt-4">
+                <button type="submit" class="btn btn-primary me-2">
+                    <i class="fa-solid fa-paper-plane me-1"></i> Submit Application
+                </button>
+
+                <a asp-controller="Job" asp-action="GetAl" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <!-- إضافة script للتحقق من النموذج -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', function(e) {
+                const coverLetter = document.querySelector('#CoverLetter').value;
+                if (!coverLetter || coverLetter.trim().length === 0) {
+                    e.preventDefault();
+                    alert('Please write a cover letter before submitting.');
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
+}

@@ -29,7 +29,7 @@ namespace JobPortalSystem.Controllers
             _context = context;
         }
 
-        // ✅ عرض جميع الوظائف + تحديد المفضلة (❤️)
+       
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -64,7 +64,7 @@ namespace JobPortalSystem.Controllers
             return View("ShowAllJobs", jobs);
         }
 
-        // ✅ صفحة إضافة وظيفة
+       
         [HttpGet]
         public async Task<IActionResult> AddJob()
         {
@@ -106,7 +106,7 @@ namespace JobPortalSystem.Controllers
             return View(job_Categ_VM);
         }
 
-        // ✅ تعديل وظيفة
+        
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
@@ -157,7 +157,7 @@ namespace JobPortalSystem.Controllers
             return View(job);
         }
 
-        // ✅ حذف وظيفة
+       
         public async Task<IActionResult> Delete(int id)
         {
             var job = await JobRepo.GetByIdAsync(id);

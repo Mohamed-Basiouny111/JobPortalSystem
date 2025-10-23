@@ -1,0 +1,129 @@
+﻿@model IEnumerable<JobPortalSystem.Models.JobApplication>
+
+@{
+    ViewData["Title"] = "Applicants";
+    Layout = "_ProfileLayout";
+    int counter = 1;
+}
+
+
+<div class="container my-5">
+    @if (!Model.Any())
+    {
+        <div class="d-flex justify-content-center align-items-center" style="height:70vh;">
+            <div class="text-center">
+                <i class="fa-solid fa-users text-primary mb-3" style="font-size: 3rem;"></i>
+                <h4 class="text-secondary">No applicants yet for this job.</h4>
+                <p class="text-muted">Check again later when job seekers apply.</p>
+                <a asp-controller="Job" asp-action="GetAll" class="btn btn-primary mt-3">
+                    <i class="fa-solid fa-briefcase me-2"></i> Back to Jobs
+                </a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="card shadow-sm p-4">
+            <h3 class="text-primary mb-4">
+                <i class="fa-solid fa-users me-2"></i> Job Applicants
+            </h3>
+
+            <div class="mb-4">
+                <form asp-action="Applicants" method="get" class="d-flex align-items-center gap-2">
+                    <label for ="jobId" class="fw-bold">Filter by Job:</label>
+                    <select name="jobId" class="form-select w-auto">
+                        <option value="">All Jobs</option>
+                        @foreach (var job in (ViewBag.EmployerJobs as List<JobPortalSystem.Models.Job>) ?? new List<JobPortalSystem.Models.Job>())
+                        {
+                            <option value="@job.Id" selected="@(job.Title == ViewBag.JobTitle)">
+                                @job.Title
+                            </option>
+                        }
+                    </select>
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+            </div>
+
+            <h5 class="text-secondary mb-3">
+                <i class="fa-solid fa-briefcase me-2"></i> Applicants for:
+                <strong>@ViewBag.JobTitle</strong> |
+                <span class="text-muted">Total: @ViewBag.ApplicantsCount</span>
+            </h5>
+
+            <div class="table-responsive">
+                <table class="table table-striped align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Applicant Name</th>
+                            <th>Email</th>
+                            <th>Applied Date</th>
+                            <th>Job Title</th> 
+                            <th>Status</th>
+                            <th>Cover Letter</th>
+                            <th>CV</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 1;
+                        }
+                        @foreach (var app in Model)
+                        {
+                            <tr>
+                                <td>@i</td>
+                                <td><strong>@app.User?.UserName</strong></td>
+                                <td>@app.User?.Email</td>
+                                <td>@app.AppliedDate.ToString("yyyy-MM-dd")</td>
+                                <td>@app.Job?.Title</td> <!-- ✅ هنا نعرض اسم الوظيفة -->
+                                <td>
+                                    <span class="badge
+                            @(app.Status == "Pending" ? "bg-warning text-dark" :
+                                                                app.Status == "Accepted" ? "bg-success" : "bg-danger")">
+                                @app.Status
+                            </span>
+                        </td>
+                        <td style="max-width: 250px; text-align: left;">
+                            @if (!string.IsNullOrWhiteSpace(app.CoverLetter))
+                                    {
+                                        @app.CoverLetter
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted fst-italic">No cover letter provided</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(app.User?.CV))
+                                    {
+                                        <a href="@Url.Content("~/cv/" + app.User.CV)" target="_blank" class="btn btn-outline-info btn-sm">
+                                            <i class="fa-solid fa-file"></i> View CV
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No CV</span>
+                                    }
+
+                                </td>
+                                <td>
+                                    <form asp-action="UpdateStatus" method="post" class="d-flex justify-content-center align-items-center gap-2">
+                                        <input type="hidden" name="id" value="@app.Id" />
+                                        <select name="status" class="form-select form-select-sm w-auto">
+                                            <option value="Pending" selected="@("Pending" == app.Status)">Pending</option>
+                                            <option value="Accepted" selected="@("Accepted" == app.Status)">Accepted</option>
+                                            <option value="Rejected" selected="@("Rejected" == app.Status)">Rejected</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
