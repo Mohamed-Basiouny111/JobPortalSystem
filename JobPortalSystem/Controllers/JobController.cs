@@ -29,13 +29,12 @@ namespace JobPortalSystem.Controllers
             _context = context;
         }
 
-        // في الـ JobController، طريقة GetAll
+        // ✅ عرض جميع الوظائف + تحديد المفضلة (❤️)
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // ✅ المفضلة
             if (user == null)
             {
                 ViewBag.FavoriteJobIds = new List<int>();
@@ -51,27 +50,61 @@ namespace JobPortalSystem.Controllers
             string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             string userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
 
-            IEnumerable<Job> jobs = await JobRepo.GetJobsWithCategoriesAsync();
+            IEnumerable<Job> jobs;
 
-            // ✅ إصلاح مشكلة appliedJobIds
-            var appliedJobIds = new List<int>();
-            if (user != null)
+            if (userRole?.ToLower() == "admin")
             {
-                appliedJobIds = await _context.JobApplications
-                    .Where(a => a.UserId == user.Id && a.JobId.HasValue)
-                    .Select(a => a.JobId.Value)
-                    .ToListAsync();
+                jobs = await JobRepo.GetJobsWithCategoriesAsync();
+            }
+            else
+            {
+                jobs = await JobRepo.GetJobsByUserAsync(userId);
             }
 
-            var viewModel = new JobsAndCategoriesVM
-            {
-                Jobs = jobs,
-                appliedJobIds = appliedJobIds
-            };
-
-            return View("ShowAllJobs", viewModel);
+            return View("ShowAllJobs", jobs);
         }
 
+        // ✅ صفحة إضافة وظيفة
+        [HttpGet]
+        public async Task<IActionResult> AddJob()
+        {
+            var job_Categ_VM = new JobAndCategoriesVM();
+            var categories = (await jobCatgRepo.GetAllAsync()).ToList();
+            job_Categ_VM.Categories = categories;
+            return View(job_Categ_VM);
+        }
+
+        // ✅ إضافة وظيفة جديدة
+        [HttpPost]
+        public async Task<IActionResult> AddJob(JobAndCategoriesVM job_Categ_VM)
+        {
+            if (ModelState.IsValid)
+            {
+                string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                Job newJob = new Job()
+                {
+                    Title = job_Categ_VM.Title,
+                    Description = job_Categ_VM.Description,
+                    Location = job_Categ_VM.Location,
+                    Requirements = job_Categ_VM.Requirements,
+                    Experience = job_Categ_VM.Experience,
+                    Salary = job_Categ_VM.Salary,
+                    CategoryId = job_Categ_VM.CategoryId,
+                    PostedByUserId = userId,
+                    ExpiryDate = job_Categ_VM.ExpiryDate.Date,
+                };
+
+                await JobRepo.AddAsync(newJob);
+                await JobRepo.SaveAsync();
+                TempData["SuccessMessage"] = "Job added successfully!";
+                return RedirectToAction("GetAll");
+            }
+
+            var categories = (await jobCatgRepo.GetAllAsync()).ToList();
+            job_Categ_VM.Categories = categories;
+            return View(job_Categ_VM);
+        }
 
         // ✅ تعديل وظيفة
         [HttpGet]

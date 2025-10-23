@@ -59,14 +59,7 @@
                 <li><a href="#work" class="link">work</a></li>
 
                 <!-- FIXED: Use lowercase "admin" to match your project -->
-                @if (User.IsInRole("admin"))
-                {
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="JobSeekers">
-                            <i class="fa-solid fa-user-shield"></i> Admin Panel
-                        </a>
-                    </li>
-                }
+              
 
                 <partial name="_IdentityPartial" />
             </ul>
@@ -132,11 +125,11 @@
                                 <i class="fa-solid fa-users"></i> Applicantion
                             </a>
                         </li>
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="EmployerDashboard" asp-action="index">
                                 <i class="fa-solid fa-chart-line"></i> Dashboard
                             </a>
-                        </li>
+                        </li> *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="CompanyDashboard" asp-action="index">
                                 <i class="fa-solid fa-chart-line"></i> DashboardCom
