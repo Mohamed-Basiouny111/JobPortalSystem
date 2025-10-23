@@ -137,6 +137,11 @@
                                 <i class="fa-solid fa-chart-line"></i> Dashboard
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="CompanyDashboard" asp-action="index">
+                                <i class="fa-solid fa-chart-line"></i> DashboardCom
+                            </a>
+                        </li>
                     }
                     <!-- 🔹 لو المستخدم Admin -->
                     @if (User.IsInRole("admin") || User.IsInRole("Admin"))
