@@ -183,6 +183,7 @@ namespace JobPortalSystem.Controllers
             await signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        [Authorize]
         public async Task<IActionResult> Profile()
         {
             var CopmID = User.Claims.FirstOrDefault(e => e.Type == ClaimTypes.NameIdentifier)?.Value;

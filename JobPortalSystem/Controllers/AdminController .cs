@@ -1,7 +1,12 @@
-﻿using JobPortalSystem.Models;
+﻿using Castle.Components.DictionaryAdapter.Xml;
+using JobPortalSystem.Context;
+using JobPortalSystem.Models;
+using JobPortalSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace JobPortalSystem.Controllers
 {
@@ -10,9 +15,13 @@ namespace JobPortalSystem.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly JobPortalContext db;
 
-        public AdminController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(UserManager<ApplicationUser> userManager, 
+            RoleManager<IdentityRole> roleManager
+            , JobPortalContext _db)
         {
+            db= _db;    
             _userManager = userManager;
             _roleManager = roleManager;
         }
@@ -47,6 +56,87 @@ namespace JobPortalSystem.Controllers
 
             return View(model);
         }
+
+
+        // get all Companies
+        public async Task<IActionResult> GetAllCompanies()
+        {
+            if (User.IsInRole("employer"))
+            {
+                var compnies = _userManager.Users.ToList();
+                var comps = new List<ComUserInfo>();
+
+                var obj = new ComUserInfo();
+
+                foreach (var user in compnies)
+                {   obj.Id= user.Id;  
+                    obj.UserName = user.UserName;
+                    obj.Email = user.Email;
+                    obj.CompanyName = user.CompanyName;
+                    comps.Add(obj);
+
+                }
+
+
+
+                return View("GetAllCompanies", comps);
+            }
+
+
+
+            return NoContent();
+        }
+
+           public async Task<IActionResult> Accept(ComUserInfo obFromRequst)
+        {
+            if (obFromRequst != null)
+            {
+                var objFromDB = await _userManager.FindByIdAsync(obFromRequst.Id);
+
+                if (objFromDB != null) { 
+                   objFromDB.CompanyIsAccepted = true;      
+                
+                }
+
+            }
+
+            return View();
+        }
+           public async Task< IActionResult> NotAccept(ComUserInfo obFromRequst)
+        {
+            if (obFromRequst != null)
+            {
+                var objFromDB = await _userManager.FindByIdAsync(obFromRequst.Id);
+
+                if (objFromDB != null)
+                {
+                    objFromDB.CompanyIsAccepted = false;
+
+                }
+
+            }
+
+            return View();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> EditRoles(EditUserRolesViewModel model)
@@ -90,4 +180,10 @@ namespace JobPortalSystem.Controllers
         public List<string> AvailableRoles { get; set; } = new();
         public List<string> SelectedRoles { get; set; } = new();
     }
+
+
+
+
+
+    
 }
