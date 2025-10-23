@@ -24,6 +24,7 @@ namespace JobPortalSystem.SeedData
             }
         }
     }
-
-
 }
+
+
+
