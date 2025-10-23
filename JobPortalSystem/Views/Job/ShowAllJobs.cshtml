@@ -1,4 +1,4 @@
-﻿@model JobPortalSystem.ViewModels.JobsAndCategoriesVM
+﻿@* @model List<Job>
 
 @{
     ViewData["Title"] = "Show All Jobs";
@@ -6,9 +6,9 @@
     int counter = 1;
 }
 
-<h1 class="text-center text-primary my-4">Available Jobs</h1>
+<h1 class="text-center text-primary my-4">Available Jobs</h1> *@
 
-<div class="my-3">
+@* <div class="my-3">
     <div class="d-flex justify-content-end mb-3">
     </div>
 
@@ -36,7 +36,7 @@
                     <th>Edit</th>
                     <th>Delete</th>
 
-                    @* 🔹 العمود الجديد للتقديم على الوظيفة *@
+                 
                     @if (User.IsInRole("job Seeker") || User.IsInRole("JOB SEEKER"))
                     {
                         <th>Apply</th>
@@ -96,7 +96,7 @@
                             </a>
                         </td>
 
-                        @* 🔹 زر Apply يظهر فقط للـ JobSeeker *@
+                       
                         @if (User.IsInRole("job Seeker") || User.IsInRole("JOB SEEKER"))
                         {
                             <td>
@@ -123,12 +123,12 @@
             </tbody>
         </table>
     </div>
-</div>
+</div> *@
 
 
-@* كود حمزه
- *@
-@* @model List<Job>
+ @* كود حمزه *@
+ 
+ @model List<Job>
 
 @{
     ViewData["Title"] = "Show All Jobs";
@@ -152,8 +152,8 @@
                     <th>No</th>
                     <th>ID</th>
                     <th>Title</th>
-                    @* <th>Description</th> *@
-                    @* <th>Location</th>
+                    <th>Description</th> 
+                     <th>Location</th>
                     <th>Salary</th>
                     <th>Experience</th>
                     <th>Requirements</th>
@@ -174,8 +174,8 @@
                         <td>@counter</td>
                         <td>@job.Id</td>
                         <td>@job.Title</td>
-                        @* <td>@job.Description</td> *@
-                        @* <td>@job.Location</td>
+                         <td>@job.Description</td> 
+                        <td>@job.Location</td>
                         <td>@job.Salary.ToString("C0")</td>
                         <td>@job.Experience</td>
                         <td>
@@ -206,8 +206,8 @@
                         {
                             <td>@job.PostedUser?.CompanyName</td>
                         }
-                        <td> *@
-              @*               <a class="btn btn-warning btn-sm text-white"
+                        <td> 
+                           <a class="btn btn-warning btn-sm text-white"
                                asp-action="Update" asp-controller="Job" asp-route-id="@job.Id">
                                 EDIT
                             </a>
@@ -218,13 +218,17 @@
                                 DELETE
                             </a>
                         </td>
+
+
                     </tr>
+
+
                     counter++;
                 }
             </tbody>
         </table>
     </div>
-</div>  *@
+</div>  
 
 
 @section Scripts {

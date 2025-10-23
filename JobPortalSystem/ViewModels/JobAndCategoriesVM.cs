@@ -20,6 +20,8 @@ namespace JobPortalSystem.ViewModels
         public string Experience { get; set; }
         public decimal Salary { get; set; }
 
+      
+
         [Required]
         [DataType(DataType.Date)]
        
