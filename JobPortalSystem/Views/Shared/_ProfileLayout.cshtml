@@ -116,6 +116,7 @@
                                 My Applications
                             </a>
                         </li>
+
                     }
                     
                     @if (User.IsInRole("employer"))
@@ -144,6 +145,12 @@
                                 <i class="fa-solid fa-user-shield"></i> Dashboard
                             </a>
                         </li>
+                        <li>
+                            <a asp-controller="Admin" asp-action="JobApplications" class="nav-link">
+                                <i class="fa-solid fa-file-contract me-2"></i> All Job Applications
+                            </a>
+                        </li>
+
                     }
                     @if (User.IsInRole("admin") || User.IsInRole("Admin"))
                     {

@@ -38,6 +38,8 @@ namespace JobPortalSystem.Controllers
             if (user == null)
             {
                 ViewBag.FavoriteJobIds = new List<int>();
+                ViewBag.AppliedJobIds = new List<int>();
+
             }
             else
             {
@@ -45,6 +47,10 @@ namespace JobPortalSystem.Controllers
                     .Where(f => f.UserId == user.Id)
                     .Select(f => f.JobId)
                     .ToListAsync();
+                ViewBag.AppliedJobIds = await _context.JobApplications
+                    .Where(a => a.UserId == user.Id)
+                    .Select(a => a.JobId)
+                     .ToListAsync();
             }
 
             string userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
