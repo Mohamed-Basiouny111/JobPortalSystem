@@ -153,7 +153,9 @@ table.dataTable thead td {
 table.dataTable tfoot {
   display: none;
 }
-
+/*table thead > tr > th {
+    padding: 120px !important;
+}*/
 div.dataTables_wrapper div.dataTables_filter input,
 div.dataTables_wrapper div.dataTables_length select {
   background-color: var(--card-color);
@@ -163,7 +165,7 @@ div.dataTables_wrapper div.dataTables_length select {
     position: absolute;
     top: 150px;
     left: 235px;
-    width: 1447px
+    width: 1200px
 }
 .dataTables_wrapper div.row > :nth-child(2) {
     display: flex;

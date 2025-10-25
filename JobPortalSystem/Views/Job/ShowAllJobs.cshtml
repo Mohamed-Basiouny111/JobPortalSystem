@@ -15,7 +15,7 @@
     </div>
 
     <div class="shadow-sm rounded">
-        <table id="jobsTable" class="table table-striped table-bordered align-middle w-100">
+        <table id="jobsTable" class="table dataTable no-padding-table table-striped table-bordered align-middle w-100">
             <thead class="table-light">
                 <tr>
                     <th>No</th>
@@ -115,11 +115,11 @@
         /* ================== Table Layout Balanced ================== */
         
        
-        #jobsTable td {
+        /* #jobsTable td {
             white-space: normal !important;
             word-wrap: break-word !important;
             word-break: break-word !important;
-        }
+        } */
 
      
         #jobsTable tr {
@@ -134,10 +134,37 @@
 
            
             #jobsTable th:nth-child(4),
-            #jobsTable td:nth-child(4) {
-                width: 150px !important; 
-                max-width: 150px !important;
+            #jobsTable td:nth-child(4) 
+            {
+                width: 120px !important; 
+                max-width: 120px !important;
+                word-break: break-word !important;
             }
+
+        table.no-padding-table.dataTable thead > tr > th.sorting,
+        table.no-padding-table.dataTable thead > tr > th.sorting_asc,
+        table.no-padding-table.dataTable thead > tr > th.sorting_desc,
+        table.no-padding-table.dataTable thead > tr > th.sorting_asc_disabled,
+        table.no-padding-table.dataTable thead > tr > th.sorting_desc_disabled,
+        table.no-padding-table.dataTable thead > tr > td.sorting,
+        table.no-padding-table.dataTable thead > tr > td.sorting_asc,
+        table.no-padding-table.dataTable thead > tr > td.sorting_desc,
+        table.no-padding-table.dataTable thead > tr > td.sorting_asc_disabled,
+        table.no-padding-table.dataTable thead > tr > td.sorting_desc_disabled {
+            padding-right: 0 !important;
+        }
+            /* #jobsTable th:nth-child(6),
+            #jobsTable td:nth-child(6){
+            width: 90px !important;
+            max-width: 900px !important;
+            } */
+
+        .profile-content {
+            position: absolute;
+            top: 150px;
+            left: 222px;
+            width: fit-content;
+        }
     </style>
  
 
@@ -145,7 +172,7 @@
         $(document).ready(function () {
             // ====== DataTable Initialization ======
             $('#jobsTable').DataTable({
-                paging: true,
+                paging: false,
                 searching: true,
                 ordering: true,
                 info: true,
@@ -171,12 +198,12 @@
                     { width: "100px", targets: 5 },
                     { width: "80px", targets: 6 },
                     { width: "100px", targets: 7 },
-                    { width: "50px", targets: 8 },
-                    { width: "50px", targets: 9 },
+                    { width: "100px", targets: 8 },
+                    { width: "100px", targets: 9 },
                     { orderable: false, targets: [-1, -2] }
                 ]
             });
-
+             $('table.dataTable thead th, table.dataTable thead td').css('padding-right', '0');
             // ===== Toastr Notifications =====
             @if (TempData["SuccessMessage"] != null)
             {
@@ -195,6 +222,20 @@
                     window.location.href = url;
                 }
             });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const el = document.querySelector('.profile-content');
+          const userAgent = navigator.userAgent;
+
+          if (userAgent.includes("Edg")) {
+            // المتصفح Edge
+            el.style.width = "fit-content;";
+          } else if (userAgent.includes("Chrome")) {
+            // المتصفح Chrome (بدون Edge)
+            el.style.width = "1470px";
+          }
         });
     </script>
 }
