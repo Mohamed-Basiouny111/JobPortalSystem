@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@* @model ApplicationUser *@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -91,10 +92,6 @@
                                 <span>Manage Users</span>
                             </a>
                         </li>
-                    }
-
-                    @if (User.IsInRole("admin") || User.IsInRole("employer"))
-                    {
                         <li>
                             <a asp-controller="Job" asp-action="GetAll">
                                 <i class="fa-solid fa-briefcase"></i>
@@ -107,8 +104,48 @@
                                 <span>JobCategory</span>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="AdminDashboard" asp-action="index">
+                                <i class="fa-solid fa-user-shield"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="account" asp-action="prof">
+                                <i class="fa-solid fa-user-shield"></i> Company
+                            </a>
+                        </li>
                     }
-                    @if (User.IsInRole("job Seeker"))
+
+                    else if (User.IsInRole("employer"))
+                    {
+                        @* if (Model.CompanyIsAccepted)
+                        { *@
+                            <li>
+                                <a asp-controller="Job" asp-action="GetAll">
+                                    <i class="fa-solid fa-briefcase"></i>
+                                    <span>Jobs</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="JobCategory" asp-action="GetAll">
+                                    <i class="fa-solid fa-tags"></i>
+                                    <span>JobCategory</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="JobApplication" asp-action="Applicants">
+                                    <i class="fa-solid fa-users"></i> Applicantion
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="CompanyDashboard" asp-action="index">
+                                    <i class="fa-solid fa-chart-line"></i> DashboardCom
+                                </a>
+                            </li>
+                        @* } *@
+                      
+                    }
+                    else if (User.IsInRole("job Seeker"))
                     {
                         <li>
                             <a asp-controller="JobApplication" asp-action="MyApplications">
@@ -120,24 +157,24 @@
                     
                     @if (User.IsInRole("employer"))
                     {
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="JobApplication" asp-action="Applicants">
                                 <i class="fa-solid fa-users"></i> Applicantion
                             </a>
-                        </li>
+                        </li> *@
                         @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="EmployerDashboard" asp-action="index">
                                 <i class="fa-solid fa-chart-line"></i> Dashboard
                             </a>
                         </li> *@
-                        <li class="nav-item">
+                        @* <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="CompanyDashboard" asp-action="index">
                                 <i class="fa-solid fa-chart-line"></i> DashboardCom
                             </a>
-                        </li>
+                        </li> *@
                     }
                     <!-- 🔹 لو المستخدم Admin -->
-                    @if (User.IsInRole("admin") || User.IsInRole("Admin"))
+                    @* @if (User.IsInRole("admin") || User.IsInRole("Admin"))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="AdminDashboard" asp-action="index">
@@ -152,7 +189,7 @@
                                 <i class="fa-solid fa-user-shield"></i> Company
                             </a>
                         </li>
-                    }
+                    } *@
 
 
 

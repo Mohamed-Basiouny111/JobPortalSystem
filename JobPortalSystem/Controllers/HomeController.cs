@@ -40,7 +40,7 @@ namespace JobPortalSystem.Controllers
                        : await jobRepo.GetJobsByNameOrLocAsync(searchWord);
             JobsAndCategoriesVM jobsAndCategoriesVM = new JobsAndCategoriesVM()
             {
-                jobs = jobs,
+                Jobs = jobs,
                 Categories = await categoryRepo.GetAllAsync()
             };
             return PartialView("_HomeJobsPV", jobsAndCategoriesVM);
@@ -61,7 +61,7 @@ namespace JobPortalSystem.Controllers
             }
             JobsAndCategoriesVM jobsAndCategoriesVM = new JobsAndCategoriesVM()
             {
-                jobs = jobs,
+                Jobs = jobs,
                 Categories = await categoryRepo.GetAllAsync()
 
             };

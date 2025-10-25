@@ -4,7 +4,101 @@
     ViewData["Title"] = "My Favorite Jobs";
 }
 
+
 <div class="container mt-5">
+    <div class="row">
+        <div class="col-12 justify-content-center mb-4">
+            <div class="d-flex justify-content-center align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="fa-solid fa-heart text-danger"></i>  Favorite Jobs
+                </h2>
+           
+            </div>
+            <hr/>
+        </div>
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info text-center py-5">
+                    <i class="fa-solid fa-heart-crack fa-3x mb-3 text-muted"></i>
+                    <h4 class="text-muted">No favorite jobs yet</h4>
+                    <p class="text-muted mb-4">Start exploring jobs and add them to your favorites by clicking the heart icon!</p>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary btn-lg">
+                        <i class="fa-solid fa-search"></i> Browse All Jobs
+                    </a>
+                </div>
+            }
+            else
+            {
+                
+                    @foreach (var favorite in Model)
+                    {
+                        <div class=" col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm job-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-3">
+                                        <h5 class="card-title text-primary">@favorite.Job.Title</h5>
+                                        <button class="btn btn-outline-danger btn-sm favorite-btn favorited"
+                                                data-job-id="@favorite.JobId"
+                                                title="Remove from favorites">
+                                            <i class="fa-solid fa-heart"></i>
+                                        </button>
+                                    </div>
+
+                                    <p class="card-text text-muted mb-3">
+                                        @(favorite.Job.Description.Length > 150 ?
+                                                                        favorite.Job.Description.Substring(0, 150) + "..." :
+                                                                        favorite.Job.Description)
+                            </p>
+
+                                    <div class="job-details">
+                                        <div class="mb-2">
+                                            <i class="fa-solid fa-location-dot text-primary me-2"></i>
+                                            <strong>Location:</strong> @favorite.Job.Location
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="fa-solid fa-money-bill-wave text-success me-2"></i>
+                                            <strong>Salary:</strong> $@favorite.Job.Salary.ToString("N2")
+                                        </div>
+                                        <div class="mb-2">
+                                            <i class="fa-solid fa-briefcase text-info me-2"></i>
+                                            <strong>Experience:</strong> @favorite.Job.Experience
+                                        </div>
+                                @if (favorite.Job.Category != null)
+                                        {
+                                            <div class="mb-2">
+                                                <i class="fa-solid fa-tag text-warning me-2"></i>
+                                                <strong>Category:</strong>
+                                                <span class="badge bg-secondary">@favorite.Job.Category.Name</span>
+                                            </div>
+                                        }
+                                        <div class="mb-0">
+                                            <i class="fa-solid fa-calendar text-secondary me-2"></i>
+                                            <strong>Added to favorites:</strong>
+                                            <span class="text-muted">@favorite.AddedDate.ToString("MMM dd, yyyy 'at' hh:mm tt")</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent border-top">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <small class="text-muted">
+                                                <i class="fa-solid fa-user me-1"></i>
+                                                Posted by: <strong>@favorite.Job.PostedUser?.UserName</strong>
+                                            </small>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+               
+            }
+    </div>
+</div>
+
+
+@* <div class="container mt-5">
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -94,7 +188,7 @@
             }
         </div>
     </div>
-</div>
+</div> *@
 
 @section Scripts {
     <script>
