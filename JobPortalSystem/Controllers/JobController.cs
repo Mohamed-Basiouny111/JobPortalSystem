@@ -13,6 +13,7 @@ namespace JobPortalSystem.Controllers
     public class JobController : Controller
     {
         private readonly IGenericRepository<JobCategory> jobCatgRepo;
+        private readonly IJobFavoriteRepository jobFavoriteRepo;
         private readonly IJobRepository JobRepo;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly JobPortalContext _context;
@@ -20,11 +21,15 @@ namespace JobPortalSystem.Controllers
         public JobController(
             IJobRepository jobRepo,
             IGenericRepository<JobCategory> jobCatgRepo,
+            IJobFavoriteRepository jobFavoriteRepo,
             UserManager<ApplicationUser> userManager,
-            JobPortalContext context)
+            JobPortalContext context
+
+            )
         {
             JobRepo = jobRepo;
             this.jobCatgRepo = jobCatgRepo;
+            this.jobFavoriteRepo=jobFavoriteRepo;
             _userManager = userManager;
             _context = context;
         }
@@ -80,7 +85,7 @@ namespace JobPortalSystem.Controllers
             return View(job_Categ_VM);
         }
 
-        // ✅ إضافة وظيفة جديدة
+       
         [HttpPost]
         public async Task<IActionResult> AddJob(JobAndCategoriesVM job_Categ_VM)
         {
@@ -163,13 +168,19 @@ namespace JobPortalSystem.Controllers
             return View(job);
         }
 
-       
+
         public async Task<IActionResult> Delete(int id)
         {
             var job = await JobRepo.GetByIdAsync(id);
             if (job == null)
                 return NotFound();
 
+            // احذف كل المفضلات الخاصة بالوظيفة دي
+            var favorites = await _context.FavoriteJobs.Where(f => f.JobId == id).ToListAsync();
+            _context.FavoriteJobs.RemoveRange(favorites);
+            await _context.SaveChangesAsync();
+
+            // بعد كده احذف الوظيفة نفسها
             await JobRepo.DeleteAsync(id);
             await JobRepo.SaveAsync();
 

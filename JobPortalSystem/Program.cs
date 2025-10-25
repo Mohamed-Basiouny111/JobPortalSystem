@@ -39,7 +39,7 @@ namespace JobPortalSystem
             builder.Services.AddScoped<IJobRepository, JobRepository>();
             builder.Services.AddScoped<IGenericRepository<JobApplication>, JobApplicationRepository>();
             builder.Services.AddScoped<IGenericRepository<JobCategory>, JobCategoryRepository>();
-            //builder.Services.AddScoped<IGenericRepository<JobFavorite>, JobFavoriteRepository>();
+            
             // Add this with your other service registrations
             builder.Services.AddScoped<IJobFavoriteRepository, JobFavoriteRepository>();
 

@@ -115,7 +115,7 @@
         /* ================== Table Layout Balanced ================== */
         
        
-        #jobsTable td:nth-child(4) {
+        #jobsTable td {
             white-space: normal !important;
             word-wrap: break-word !important;
             word-break: break-word !important;
@@ -127,16 +127,16 @@
         }
 
        
-        #jobsTable {
+        /* #jobsTable {
             table-layout: fixed !important;
             width: 100% !important;
-        }
+        } */
 
            
             #jobsTable th:nth-child(4),
             #jobsTable td:nth-child(4) {
-                width: 250px !important; 
-                max-width: 250px !important;
+                width: 150px !important; 
+                max-width: 150px !important;
             }
     </style>
  
@@ -170,9 +170,9 @@
                     { width: "80px", targets: 4 },
                     { width: "100px", targets: 5 },
                     { width: "80px", targets: 6 },
-                    { width: "160px", targets: 7 },
-                    { width: "70px", targets: 8 },
-                    { width: "80px", targets: 9 },
+                    { width: "100px", targets: 7 },
+                    { width: "50px", targets: 8 },
+                    { width: "50px", targets: 9 },
                     { orderable: false, targets: [-1, -2] }
                 ]
             });

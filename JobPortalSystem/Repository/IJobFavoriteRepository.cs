@@ -11,6 +11,8 @@ namespace JobPortalSystem.Repository
         Task<JobFavorite> GetFavoriteByJobAndUserAsync(int jobId, string userId);
         Task AddAsync(JobFavorite favorite);
         Task RemoveAsync(JobFavorite favorite);
+
+        //Task DeleteAsync(int id);
         Task<bool> IsJobFavoriteAsync(int jobId, string userId);
     }
 
@@ -65,5 +67,11 @@ namespace JobPortalSystem.Repository
             return await _context.FavoriteJobs
                 .AnyAsync(f => f.JobId == jobId && f.UserId == userId);
         }
+
+        //public async Task DeleteAsync(int id)
+        //{
+        //  var favJob =await GetFavoriteAsync(id);
+        //   await RemoveAsync(favJob);
+        //}
     }
 }
