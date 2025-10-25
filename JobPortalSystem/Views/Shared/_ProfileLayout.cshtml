@@ -1,4 +1,4 @@
-﻿@* @model ApplicationUser *@
+﻿
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,7 +41,7 @@
 </head>
 <body>
     <!-- Start Header -->
-
+    
     <header>
         <div class="container">
             <div class="burger-list">
@@ -118,8 +118,9 @@
 
                     else if (User.IsInRole("employer"))
                     {
-                        @* if (Model.CompanyIsAccepted)
-                        { *@
+
+                            if ((string)ViewData["companyStatus"] == "Accebted")
+                        {
                             <li>
                                 <a asp-controller="Job" asp-action="GetAll">
                                     <i class="fa-solid fa-briefcase"></i>
@@ -142,7 +143,7 @@
                                     <i class="fa-solid fa-chart-line"></i> DashboardCom
                                 </a>
                             </li>
-                        @* } *@
+                        }
                       
                     }
                     else if (User.IsInRole("job Seeker"))
@@ -203,6 +204,7 @@
                 </ul>
             </div>
         </div>
+        <p>@((string)ViewData["companyStatus"] == "Accepted" ? "true" : "false")</p>
 
         <div class="profile-content">
             @RenderBody()

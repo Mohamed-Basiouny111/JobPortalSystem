@@ -213,7 +213,7 @@ namespace JobPortalSystem.Controllers
                 {
                     compInfo.CompanyStatus = "Not Accebted";
                 }
-
+                ViewData["companyStatus"] = compInfo.CompanyStatus;
                 return View("CompanyInfo", compInfo);
             }
             var UserInfo = new ComUserInfo()
