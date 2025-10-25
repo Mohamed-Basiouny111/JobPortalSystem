@@ -1,0 +1,54 @@
+﻿@model IEnumerable<JobPortalSystem.Models.JobApplication>
+
+@{
+    ViewData["Title"] = "All Job Applications";
+    Layout = "_ProfileLayout";
+}
+
+<h2 class="text-center my-4 text-primary">All Job Applications</h2>
+
+<table class="table table-bordered table-striped text-center align-middle">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Applicant Name</th>
+            <th>Email</th>
+            <th>Job Title</th>
+            <th>Applied Date</th>
+            <th>Status</th>
+            <th>Cover Letter</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int i = 1;
+        }
+        @foreach (var app in Model)
+        {
+            <tr>
+                <td>@i</td>
+                <td>@app.User?.UserName</td>
+                <td>@app.User?.Email</td>
+                <td>@app.Job?.Title</td>
+                <td>@app.AppliedDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <span class="badge @(app.Status == "Pending" ? "bg-warning text-dark" :
+                                                                   app.Status == "Accepted" ? "bg-success" : "bg-danger")">
+                    @app.Status
+                </span>
+            </td>
+            <td>
+                @if (!string.IsNullOrWhiteSpace(app.CoverLetter))
+                    {
+                        @app.CoverLetter
+                    }
+                    else
+                    {
+                        <span class="text-muted fst-italic">No cover letter</span>
+                    }
+                </td>
+            </tr>
+            i++;
+        }
+    </tbody>
+</table>

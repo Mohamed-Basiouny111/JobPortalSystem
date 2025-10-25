@@ -1,7 +1,9 @@
-﻿using JobPortalSystem.Models;
+﻿using JobPortalSystem.Context;
+using JobPortalSystem.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace JobPortalSystem.Controllers
 {
@@ -10,11 +12,14 @@ namespace JobPortalSystem.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly JobPortalContext context;
 
-        public AdminController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, JobPortalContext context)
+
         {
             _userManager = userManager;
             _roleManager = roleManager;
+            this.context=context;
         }
 
         // ✅ Show all users
@@ -22,6 +27,16 @@ namespace JobPortalSystem.Controllers
         {
             var users = _userManager.Users.ToList();
             return View(users);
+        }
+        public async Task<IActionResult> JobApplications()
+        {
+            var applications = await context.JobApplications
+                .Include(a => a.User)  // To get user details
+                .Include(a => a.Job)   // To get related job details
+                .OrderByDescending(a => a.AppliedDate)
+                .ToListAsync();
+
+            return View(applications);
         }
 
         // ✅ Edit roles for specific user

@@ -14,27 +14,26 @@ namespace JobPortalSystem.Controllers
         private readonly IGenericRepository<JobApplication> _jobAppRepo;
         private readonly IGenericRepository<Job> _jobRepo;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly JobPortalContext _context; // ✅ أضفنا الـ DbContext
+        private readonly JobPortalContext _context;
 
         public JobApplicationController(
             IGenericRepository<JobApplication> jobAppRepo,
             IGenericRepository<Job> jobRepo,
             UserManager<ApplicationUser> userManager,
-            JobPortalContext context) // ✅ استقبلناه هنا
+            JobPortalContext context)
         {
             _jobAppRepo = jobAppRepo;
             _jobRepo = jobRepo;
             _userManager = userManager;
-            _context = context; // ✅ خزناه هنا
+            _context = context;
         }
 
-        // ✅ عرض الطلبات الخاصة بالمستخدم (Job Seeker)
+        // ✅ عرض الطلبات الخاصة بالمستخدم
         [Authorize(Roles = "job Seeker")]
         public async Task<IActionResult> MyApplications()
         {
             var user = await _userManager.GetUserAsync(User);
 
-            // ✅ التحميل بالعلاقات (Job + PostedUser)
             var myApps = await _context.JobApplications
                 .Include(a => a.Job)
                 .ThenInclude(j => j.PostedUser)
@@ -45,11 +44,23 @@ namespace JobPortalSystem.Controllers
             return View(myApps);
         }
 
-        // ✅ [GET] عرض صفحة التقديم
+        // ✅ [GET] عرض صفحة التقديم — مع منع الدخول لو مقدم قبل كده
         [Authorize(Roles = "job Seeker")]
         [HttpGet]
         public async Task<IActionResult> Apply(int jobId)
         {
+            var user = await _userManager.GetUserAsync(User);
+
+            // 🔒 منع الدخول لصفحة التقديم لو مقدم بالفعل
+            bool alreadyApplied = await _context.JobApplications
+                .AnyAsync(a => a.JobId == jobId && a.UserId == user.Id);
+
+            if (alreadyApplied)
+            {
+                TempData["Error"] = "⚠ You have already applied for this job.";
+                return RedirectToAction("MyApplications");
+            }
+
             var job = await _jobRepo.GetByIdAsync(jobId);
             if (job == null)
                 return NotFound("Job not found");
@@ -58,7 +69,7 @@ namespace JobPortalSystem.Controllers
             return View(new JobApplication { JobId = jobId });
         }
 
-        // ✅ [POST] تنفيذ التقديم
+        // ✅ [POST] تنفيذ التقديم — مع منع التقديم مرة أخرى
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "job Seeker")]
@@ -66,26 +77,22 @@ namespace JobPortalSystem.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return Unauthorized();
+
+            // 🔒 تأكيد رفع الـ CV قبل التقديم
             if (string.IsNullOrEmpty(user.CV))
             {
-                TempData["Error"] = "⚠ You must upload your CV before applying for a job.";
+                TempData["Error"] = "⚠ You must upload your CV before applying.";
                 return RedirectToAction("EditUserInfo", "Account");
             }
-
-            var job = await _jobRepo.GetByIdAsync(model.JobId ?? 0);
-            if (job == null)
-                return NotFound("Job not found");
-
-            ViewBag.Job = job;
-
             if (string.IsNullOrWhiteSpace(model.CoverLetter))
-            {
-                ModelState.AddModelError("CoverLetter", "Please write a cover letter before submitting.");
+                {
+                 ModelState.AddModelError("CoverLetter", "Please write a cover letter before submitting.");
                 return View(model);
-            }
+                }
 
-            var alreadyApplied = (await _jobAppRepo.GetAllAsync())
-                .Any(a => a.JobId == model.JobId && a.UserId == user.Id);
+            // 🔒 منع التقديم المكرر من السيرفر
+            bool alreadyApplied = await _context.JobApplications
+                .AnyAsync(a => a.JobId == model.JobId && a.UserId == user.Id);
 
             if (alreadyApplied)
             {
@@ -93,6 +100,7 @@ namespace JobPortalSystem.Controllers
                 return RedirectToAction("MyApplications");
             }
 
+            // ✅ إنشاء طلب جديد
             var newApp = new JobApplication
             {
                 JobId = model.JobId,
@@ -109,7 +117,7 @@ namespace JobPortalSystem.Controllers
             return RedirectToAction("MyApplications");
         }
 
-        // ✅ عرض المتقدمين لوظيفة (Employer)
+        // ✅ عرض المتقدمين (لـ Employer فقط)
         [Authorize(Roles = "employer")]
         public async Task<IActionResult> Applicants(int? jobId)
         {
@@ -117,41 +125,31 @@ namespace JobPortalSystem.Controllers
             if (employer == null)
                 return Unauthorized();
 
-            // 🟢 جلب الوظائف الخاصة بالـ Employer الحالي
             var employerJobs = await _context.Jobs
                 .Where(j => j.PostedByUserId == employer.Id)
                 .ToListAsync();
 
-            // ✅ تأكد إن الـ ViewBag مش فاضي حتى لو مفيش وظائف
-            ViewBag.EmployerJobs = employerJobs ?? new List<Job>();
+            ViewBag.EmployerJobs = employerJobs;
 
-            // 🟢 فلترة الطلبات على وظائف الـ Employer فقط
-            var jobAppsQuery = _context.JobApplications
+            var query = _context.JobApplications
                 .Include(a => a.User)
                 .Include(a => a.Job)
                 .Where(a => employerJobs.Select(j => j.Id).Contains(a.JobId ?? 0));
 
             if (jobId.HasValue)
-                jobAppsQuery = jobAppsQuery.Where(a => a.JobId == jobId.Value);
+                query = query.Where(a => a.JobId == jobId.Value);
 
-            var jobApps = await jobAppsQuery
-                .OrderByDescending(a => a.AppliedDate)
-                .ToListAsync();
+            var jobApps = await query.OrderByDescending(a => a.AppliedDate).ToListAsync();
 
             ViewBag.JobTitle = jobId.HasValue
                 ? jobApps.FirstOrDefault()?.Job?.Title ?? "Unknown Job"
                 : "All Your Job Applicants";
-
             ViewBag.ApplicantsCount = jobApps.Count;
 
             return View(jobApps);
         }
 
-
-
-
-
-        // ✅ تحديث حالة المتقدم (Employer)
+        // ✅ تحديث الحالة (قبول - رفض)
         [Authorize(Roles = "employer")]
         [HttpPost]
         public async Task<IActionResult> UpdateStatus(int id, string status)
@@ -168,3 +166,4 @@ namespace JobPortalSystem.Controllers
         }
     }
 }
+

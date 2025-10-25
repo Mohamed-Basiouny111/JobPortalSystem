@@ -40,22 +40,29 @@
                         <strong>Salary:</strong> @job.Salary
                     </div>
                 </div>
-                <div id="icons" class="d-flex align-items-center justify-content-between mt-3">
-                    @if (User.IsInRole("admin") || User.IsInRole("employer"))
-                    {
-                        <button class="btn btn-warning text-white disabled">Apply Job</button>
-                    }
-                    else
-                    {
-                        <a asp-controller="JobApplication"
-                           asp-action="Apply"
-                           asp-route-jobId="@job.Id"
-                           class="btn btn-warning text-white">
-                            Apply Job
-                        </a>
-                    }
+                    <div id="icons" class="d-flex align-items-center justify-content-between mt-3">
+                        @if (User.IsInRole("admin") || User.IsInRole("employer"))
+                        {
+                            <!-- Admin أو Employer → مينفعش يقدم -->
+                            <button class="btn btn-secondary btn-sm" disabled>Apply Job</button>
+                        }
+                       
+                        else
+                        {
+                            <!-- يقدر يقدم لأول مرة فقط -->
+                            <form asp-controller="JobApplication" asp-action="Apply" method="get">
+                                <input type="hidden" name="jobId" value="@job.Id" />
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    Apply Job
+                                </button>
+                            </form>
+                        }
+
+                        <i class="fa-regular fa-heart fa-xl favorite"></i>
+                    </div>
+
+
                     <i class="fa-regular fa-heart fa-xl favorite"></i>
-                </div>
             </div>
         </div>
     }

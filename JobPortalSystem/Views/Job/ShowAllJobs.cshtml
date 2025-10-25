@@ -165,6 +165,11 @@
                     }
                     <th>Edit</th>
                     <th>Delete</th>
+                    @if (User.IsInRole("Job Seeker"))
+                    {
+                        <th>Apply</th>
+                    }
+
                 </tr>
             </thead>
             <tbody>
@@ -218,9 +223,10 @@
                                 DELETE
                             </a>
                         </td>
-
-
+                        
+                        }
                     </tr>
+                    
 
 
                     counter++;
