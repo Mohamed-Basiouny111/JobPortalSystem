@@ -1,5 +1,6 @@
 ﻿using JobPortalSystem.Context;
 using JobPortalSystem.Models;
+using JobPortalSystem.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -93,6 +94,67 @@ namespace JobPortalSystem.Controllers
 
             return RedirectToAction("Users");
         }
+
+        public async Task<IActionResult> GetAllCompanies()
+        {
+            
+            var employers = await _userManager.GetUsersInRoleAsync("Employer");
+
+            var comps = new List<ComUserInfo>();
+
+            foreach (var user in employers)
+            {
+                var obj = new ComUserInfo
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    CompanyName = user.CompanyName,
+                    CompanyIsAccepted = user.CompanyIsAccepted, 
+                    
+                };
+
+                comps.Add(obj);
+            }
+
+            return View("GetAllCompanies", comps);
+        }
+
+
+        public async Task<IActionResult> Accept(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var objFromDB = await _userManager.FindByIdAsync(id);
+
+                if (objFromDB != null)
+                {
+                    objFromDB.CompanyIsAccepted = true;
+                    await _userManager.UpdateAsync(objFromDB); 
+                }
+            }
+
+            return RedirectToAction("GetAllCompanies");
+        }
+
+        public async Task<IActionResult> NotAccept(string id)
+        {
+            if (!string.IsNullOrEmpty(id))
+            {
+                var objFromDB = await _userManager.FindByIdAsync(id);
+
+                if (objFromDB != null)
+                {
+                    objFromDB.CompanyIsAccepted = false;
+                    await _userManager.UpdateAsync(objFromDB);
+                }
+            }
+
+            return RedirectToAction("GetAllCompanies");
+        }
+
+
+
     }
 
     // ✅ Helper ViewModel
