@@ -1,0 +1,56 @@
+﻿@model IEnumerable<JobPortalSystem.ViewModels.ComUserInfo>
+
+@{
+    ViewData["Title"] = "GetAllCompanies";
+    Layout = "_ProfileLayout";
+}
+
+<h1>All Companies</h1>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.UserName)</th>
+            <th>@Html.DisplayNameFor(model => model.Email)</th>
+            <th>@Html.DisplayNameFor(model => model.CompanyName)</th>
+            <th>Status</th>
+            <th>Accepted</th>
+            <th>Not Accepted</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.UserName</td>
+                <td>@item.Email</td>
+                <td>@item.CompanyName</td>
+
+                <td>
+                    @if (item.CompanyIsAccepted)
+                    {
+                        <span class="badge bg-success">Accepted</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Not Accepted</span>
+                    }
+                </td>
+
+                <td>
+                    <a asp-action="Accept" asp-controller="Admin" asp-route-id="@item.Id"
+                       class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-check-circle"></i> Accept
+                    </a>
+                </td>
+
+                <td>
+                    <a asp-action="NotAccept" asp-controller="Admin" asp-route-id="@item.Id"
+                       class="btn btn-outline-danger btn-sm">
+                        <i class="bi bi-x-circle"></i> Not Accept
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

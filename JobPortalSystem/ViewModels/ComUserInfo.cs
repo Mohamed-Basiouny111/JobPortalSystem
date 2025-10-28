@@ -13,6 +13,8 @@ namespace JobPortalSystem.ViewModels
         [DataType(DataType.EmailAddress)]
         [Required]
         public string Email { get; set; }
+        public bool CompanyIsAccepted { get; set; }
+
         public string? CompanyStatus { get; set; }
         public string? CV { get; set; }
         public IFormFile? CVFile { get; set; }
